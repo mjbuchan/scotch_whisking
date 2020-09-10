@@ -141,11 +141,11 @@ def plot_unit_clusters(pop_t2p, pop_half_width, fs_units, rs_units):
     plt.xlabel('Trough to peak time (ms)')
     plt.ylabel('Half amplitude duration (ms)')
 
-    plt.vlines(0.55, 0, 1, ls = ':', color = 'grey')
+    plt.vlines(0.5, 0, 1, ls = ':', color = 'grey')
 
     red = sns.color_palette("Reds")[-2]
     blue = sns.color_palette("Blues")[-2]
-    plt.text(0.05, 0.4, "fast-spiking", size=12, color=red)
+    plt.text(0.025, 0.4, "fast-spiking", size=12, color=red)
     plt.text(0.8, 0.8, "regular-spiking", size=12, color=blue)
 
 
