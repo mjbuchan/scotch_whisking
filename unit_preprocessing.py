@@ -13,7 +13,7 @@ def load_data(date, path):
     # load lfp data
 
     lfp = loadmat(os.path.join(path, date, 'whisk_dual_single/lfp_1.mat'))
-    lfp = lfp['lfp']
+    lfp = lfp['lfp_1']
 
     # load spikes from 10ms LED flash protocol
 
