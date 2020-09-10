@@ -252,3 +252,7 @@ def calculate_coupling(spikes, lfp, mua, method):
         unit_lfp_coupling.append(float('NaN'))
 
     return population_stpr, population_stlfp, unit_mua_coupling, unit_lfp_coupling
+
+
+
+## test functionality push
