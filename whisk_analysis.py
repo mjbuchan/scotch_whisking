@@ -37,7 +37,7 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
             unit_trial_count.append(hist)
 
-            if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.05)).sum() > 0:
+            if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.099)).sum() > 0:
 
                 latency = min(i for i in spike_times[trial] if i > 1)
 
