@@ -268,7 +268,7 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
         
                 "no_bins" - how many bins? 3000 for 1ms bins in 3s trial
                 
-                "resp window" - how long after stim to count responses - 10ms usually
+                "resp window" - how long after stim to count responses - 20ms usually
                 
                 "trial length" - usually 3s for optotag
                 
@@ -307,7 +307,7 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
         opto_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         opto_resp_perc.append(unit_response)
 
-    opto_tag = np.asarray(opto_resp_perc) > 10
+    opto_tag = np.asarray(opto_resp_perc) > 20
 
     window_start = 1000
     window_stop = window_start + response_bin 
