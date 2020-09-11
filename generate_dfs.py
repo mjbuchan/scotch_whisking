@@ -1,4 +1,4 @@
-def build_dfs(date)
+def build_dfs(date):
 
     import seaborn as sns
     import os
