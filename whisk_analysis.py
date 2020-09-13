@@ -29,18 +29,18 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
         for trial in range(len(whisk_1[neuron])):
 
-            hist, bins = np.histogram(spike_times[trial], 300, range = (0,3))
-            #hist, bins = np.histogram(spike_times[trial], 3000, range = (0,3))
+            #hist, bins = np.histogram(spike_times[trial], 300, range = (0,3))
+            hist, bins = np.histogram(spike_times[trial], 3000, range = (0,3))
 
-            if sum(hist[100:105]) > 0:
-            #if sum(hist[1000:1050]) > 0:
+            #if sum(hist[100:105]) > 0:
+            if sum(hist[1000:1050]) > 0:
 
                 unit_response += 1
 
             unit_trial_count.append(hist)
 
-            #if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.099)).sum() > 0:
-            if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.01)).sum() > 0:
+            if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.099)).sum() > 0:
+            #if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.01)).sum() > 0:
 
 
                 latency = min(i for i in spike_times[trial] if i > 1)
@@ -73,18 +73,18 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
         for trial in range(len(whisk_2[neuron])):
 
-            hist, bins = np.histogram(spike_times[trial], 300, range = (0,3))
-            #hist, bins = np.histogram(spike_times[trial], 3000, range = (0,3))
+            #hist, bins = np.histogram(spike_times[trial], 300, range = (0,3))
+            hist, bins = np.histogram(spike_times[trial], 3000, range = (0,3))
 
-            if sum(hist[100:105]) > 0:
-            #if sum(hist[1000:1050]) > 0:
+            #if sum(hist[100:105]) > 0:
+            if sum(hist[1000:1050]) > 0:
 
                 unit_response += 1
 
             unit_trial_count.append(hist)
 
-            #if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.099)).sum() > 0:
-            if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.01)).sum() > 0:
+            if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.099)).sum() > 0:
+            #if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.01)).sum() > 0:
 
                 latency = min(i for i in spike_times[trial] if i > 1)
 
@@ -100,18 +100,18 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
         w2_resp_perc.append(unit_response)
         w2_latency.append(np.nanmean(unit_latency, 0))
 
-    #w1_bin_responses = [np.sum(resp[1000:1050]) for resp in w1_trial_counts]
-    w1_bin_responses = [np.sum(resp[100:105]) for resp in w1_trial_counts]
-    #w1_spont_responses = [np.sum(resp[900:950]) for resp in w1_trial_counts]
-    w1_spont_responses = [np.sum(resp[90:95]) for resp in w1_trial_counts]
+    w1_bin_responses = [np.sum(resp[1000:1050]) for resp in w1_trial_counts]
+    #w1_bin_responses = [np.sum(resp[100:105]) for resp in w1_trial_counts]
+    w1_spont_responses = [np.sum(resp[900:950]) for resp in w1_trial_counts]
+    #w1_spont_responses = [np.sum(resp[90:95]) for resp in w1_trial_counts]
     w1_bin_responses = (np.array(w1_bin_responses) - np.array(w1_spont_responses)).tolist()
 
     w1_avg_response = np.mean(w1_bin_responses)
 
-    #w2_bin_responses = [np.sum(resp[1000:1050]) for resp in w2_trial_counts]
-    w2_bin_responses = [np.sum(resp[100:105]) for resp in w2_trial_counts]
-    #w2_spont_responses = [np.sum(resp[900:950]) for resp in w2_trial_counts]
-    w2_spont_responses = [np.sum(resp[90:95]) for resp in w2_trial_counts]
+    w2_bin_responses = [np.sum(resp[1000:1050]) for resp in w2_trial_counts]
+    #w2_bin_responses = [np.sum(resp[100:105]) for resp in w2_trial_counts]
+    w2_spont_responses = [np.sum(resp[900:950]) for resp in w2_trial_counts]
+    #w2_spont_responses = [np.sum(resp[90:95]) for resp in w2_trial_counts]
     w2_bin_responses = (np.array(w2_bin_responses) - np.array(w2_spont_responses)).tolist()
 
     w2_avg_response = np.mean(w2_bin_responses)
