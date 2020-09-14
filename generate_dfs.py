@@ -141,17 +141,18 @@ def build_dfs(date):
     plt.savefig(os.path.join(figsave, date, 'aw_quad_resp.png'))
 
     data = {'label': labels, 'depths': unit_depths, 'rs': rs_units, 'fs': fs_units, 
-            'opto_rs': opto_rs_units, 'opto_fs': opto_fs_units, 't2p': pop_t2p,
-            'half_width': pop_half_width[:,0], 'l4': l4, 'mua_coupling': unit_mua_coupling,
-            'lfp_coupling': unit_lfp_coupling, 'pw_resp_perc': pw_resp_perc, 'pw_latency': pw_latency,
-            'pw_bin_resp': pw_bin_responses, 'aw_resp_perc': aw_resp_perc, 'aw_latency': aw_latency,
-            'aw_bin_resp': aw_bin_responses, 'pw_1': pw_quad_1, 'pw_2': pw_quad_2, 'pw_3': pw_quad_3,
-            'pw_4': pw_quad_4, 'aw_1': aw_quad_1, 'aw_2': aw_quad_2, 'aw_3': aw_quad_3,'aw_4': aw_quad_4}
+           'opto_rs': opto_rs_units, 'opto_fs': opto_fs_units, 't2p': pop_t2p,
+           'half_width': pop_half_width[:,0], 'l4': l4, 'mua_coupling': unit_mua_coupling,
+           'lfp_coupling': unit_lfp_coupling, 'pw_resp_perc': pw_resp_perc, 'pw_latency': pw_latency,
+           'pw_bin_resp': pw_bin_responses, 'aw_resp_perc': aw_resp_perc, 'aw_latency': aw_latency,
+           'aw_bin_resp': aw_bin_responses, 'pw_1': pw_quad_1, 'pw_2': pw_quad_2, 'pw_3': pw_quad_3,
+           'pw_4': pw_quad_4, 'aw_1': aw_quad_1, 'aw_2': aw_quad_2, 'aw_3': aw_quad_3,'aw_4': aw_quad_4,
+           'opto_resp_perc': opto_resp_perc, 'opto_bin_resp': opto_bin_responses}
 
 
-    import pandas as pd
+import pandas as pd
 
-    df = pd.DataFrame(data)
+df = pd.DataFrame(data)
 
     df.to_pickle(os.path.join(save, '{}.pkl'.format(date))) 
 

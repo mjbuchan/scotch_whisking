@@ -307,13 +307,15 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
         opto_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         opto_resp_perc.append(unit_response)
 
-    opto_tag = np.asarray(opto_resp_perc) > 10
+
 
     window_start = 1000
     window_stop = window_start + response_bin 
 
     opto_bin_responses = [np.sum(resp[window_start:window_stop]) for resp in opto_trial_counts]
     
+    opto_tag = ((np.asarray(opto_resp_perc) > 20) | (np.asarray(opto_bin_responses) > 1))
+
     return opto_trial_counts, opto_resp_perc, opto_tag, opto_bin_responses
 
 
