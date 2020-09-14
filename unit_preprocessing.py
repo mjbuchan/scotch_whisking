@@ -113,7 +113,7 @@ def cluster_units(pop_t2p, pop_half_width):
     Matt Buchan // Akerman Lab - Sept 2020
     '''
 
-    half_width_crit = (pop_half_width < 1)
+    half_width_crit = (pop_half_width < 2.5)
 
     fs_units = ((pop_t2p > 0) & (pop_t2p < 0.5) & (half_width_crit[:,0] == True))
     rs_units = ((pop_t2p > 0.5) & (pop_t2p < 1.5)& (half_width_crit[:,0] == True))
@@ -314,7 +314,7 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
 
     opto_bin_responses = [np.sum(resp[window_start:window_stop]) for resp in opto_trial_counts]
     
-    opto_tag = ((np.asarray(opto_resp_perc) > 20) | (np.asarray(opto_bin_responses) > 1))
+    opto_tag = ((np.asarray(opto_resp_perc) >= 20) | (np.asarray(opto_bin_responses) >= 1))
 
     return opto_trial_counts, opto_resp_perc, opto_tag, opto_bin_responses
 

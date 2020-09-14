@@ -94,7 +94,7 @@ def build_dfs(date):
 
     #perform single whisk analysis
 
-    pw_trial_counts, pw_resp_perc, pw_latency, pw_bin_responses, aw_trial_counts, aw_resp_perc, aw_latency, aw_bin_responses, w1_avg_response, w2_avg_response = whisk.dual_whisk_single_analysis(single_whisk_1, single_whisk_2)
+    pw_trial_counts, pw_resp_perc, pw_latency, pw_bin_responses, aw_trial_counts, aw_resp_perc, aw_latency, aw_bin_responses, w1_avg_response, w2_avg_response, w1_spont_responses = whisk.dual_whisk_single_analysis(single_whisk_1, single_whisk_2)
 
     # Perform quad whisk analysis
 
@@ -147,12 +147,12 @@ def build_dfs(date):
            'pw_bin_resp': pw_bin_responses, 'aw_resp_perc': aw_resp_perc, 'aw_latency': aw_latency,
            'aw_bin_resp': aw_bin_responses, 'pw_1': pw_quad_1, 'pw_2': pw_quad_2, 'pw_3': pw_quad_3,
            'pw_4': pw_quad_4, 'aw_1': aw_quad_1, 'aw_2': aw_quad_2, 'aw_3': aw_quad_3,'aw_4': aw_quad_4,
-           'opto_resp_perc': opto_resp_perc, 'opto_bin_resp': opto_bin_responses}
+           'opto_resp_perc': opto_resp_perc, 'opto_bin_resp': opto_bin_responses, 'spont_resp': w1_spont_responses}
 
 
-import pandas as pd
+    import pandas as pd
 
-df = pd.DataFrame(data)
+    df = pd.DataFrame(data)
 
     df.to_pickle(os.path.join(save, '{}.pkl'.format(date))) 
 

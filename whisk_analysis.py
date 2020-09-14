@@ -140,7 +140,7 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
         aw_latency = w1_latency
         aw_bin_responses = w1_bin_responses
 
-    return pw_trial_counts, pw_resp_perc, pw_latency, pw_bin_responses, aw_trial_counts, aw_resp_perc, aw_latency, aw_bin_responses, w1_avg_response, w2_avg_response
+    return pw_trial_counts, pw_resp_perc, pw_latency, pw_bin_responses, aw_trial_counts, aw_resp_perc, aw_latency, aw_bin_responses, w1_avg_response, w2_avg_response, w1_spont_responses
 
 
 def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response):
