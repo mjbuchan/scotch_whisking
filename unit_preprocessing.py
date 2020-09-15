@@ -148,6 +148,8 @@ def plot_unit_clusters(pop_t2p, pop_half_width, fs_units, rs_units):
     plt.text(0.025, 0.4, "fast-spiking", size=12, color=red)
     plt.text(0.8, 0.8, "regular-spiking", size=12, color=blue)
 
+    plt.tight_layout()
+
 
 def calculate_csd(lfp, sigma):
     
@@ -217,7 +219,11 @@ def plot_csd(csd, window_min, window_max):
     '''
 
     plt.figure(figsize = (2,4))
-    sns.heatmap(csd[window_min:window_max].T, cmap = 'coolwarm')
+    sns.heatmap(csd[window_min:window_max].T, cmap = 'coolwarm', cbar_kws={'ticks': []})
+
+    plt.tight_layout()
+    plt.yticks([])
+    plt.xticks([])
 
 
 def calculate_l4(csd, depth, unit_depths):

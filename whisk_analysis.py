@@ -53,6 +53,8 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
             unit_latency.append(latency)
 
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.007)].tolist() 
+
         w1_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w1_resp_perc.append(unit_response)
         w1_latency.append(np.nanmean(unit_latency))
@@ -96,7 +98,7 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
             unit_latency.append(latency)
 
-        unit_latency = unit_latency[unit_latency < 20]    
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.007)].tolist()    
 
         w2_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w2_resp_perc.append(unit_response)
@@ -244,12 +246,12 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
         w2_resp_perc.append(unit_response)
         w2_latency.append(np.nanmean(unit_latency, 0))
 
-    w1_resp_1 = [np.sum(resp[1000:1099]) for resp in w1_trial_counts]
-    w1_resp_2 = [np.sum(resp[1100:1199]) for resp in w1_trial_counts]
-    w1_resp_3 = [np.sum(resp[1200:1299]) for resp in w1_trial_counts]
-    w1_resp_4 = [np.sum(resp[1300:1399]) for resp in w1_trial_counts]
+    w1_resp_1 = [np.sum(resp[1000:1050]) for resp in w1_trial_counts]
+    w1_resp_2 = [np.sum(resp[1100:1150]) for resp in w1_trial_counts]
+    w1_resp_3 = [np.sum(resp[1200:1250]) for resp in w1_trial_counts]
+    w1_resp_4 = [np.sum(resp[1300:1350]) for resp in w1_trial_counts]
     
-    w1_spont_responses = [np.sum(resp[900:999]) for resp in w1_trial_counts]
+    w1_spont_responses = [np.sum(resp[900:950]) for resp in w1_trial_counts]
     
     w1_resp_1 = np.array(w1_resp_1) - np.array(w1_spont_responses).tolist()
     w1_resp_2 = np.array(w1_resp_2) - np.array(w1_spont_responses).tolist()
@@ -261,12 +263,12 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
     w1_resp_3 = np.where(w1_resp_3<0, 0.001, w1_resp_3)
     w1_resp_4 = np.where(w1_resp_4<0, 0.001, w1_resp_4)
     
-    w2_resp_1 = [np.sum(resp[1000:1099]) for resp in w2_trial_counts]
-    w2_resp_2 = [np.sum(resp[1100:1199]) for resp in w2_trial_counts]
-    w2_resp_3 = [np.sum(resp[1200:1299]) for resp in w2_trial_counts]
-    w2_resp_4 = [np.sum(resp[1300:1399]) for resp in w2_trial_counts]
+    w2_resp_1 = [np.sum(resp[1000:1050]) for resp in w2_trial_counts]
+    w2_resp_2 = [np.sum(resp[1100:1150]) for resp in w2_trial_counts]
+    w2_resp_3 = [np.sum(resp[1200:1250]) for resp in w2_trial_counts]
+    w2_resp_4 = [np.sum(resp[1300:1350]) for resp in w2_trial_counts]
     
-    w2_spont_responses = [np.sum(resp[900:999]) for resp in w2_trial_counts]
+    w2_spont_responses = [np.sum(resp[900:950]) for resp in w2_trial_counts]
     
     w2_resp_1 = np.array(w2_resp_1) - np.array(w2_spont_responses).tolist()
     w2_resp_2 = np.array(w2_resp_2) - np.array(w2_spont_responses).tolist()
