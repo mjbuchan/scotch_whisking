@@ -113,7 +113,7 @@ def cluster_units(pop_t2p, pop_half_width):
     Matt Buchan // Akerman Lab - Sept 2020
     '''
 
-    half_width_crit = (pop_half_width < 2.5)
+    half_width_crit = (pop_half_width < 1)
 
     fs_units = ((pop_t2p > 0) & (pop_t2p < 0.5) & (half_width_crit[:,0] == True))
     rs_units = ((pop_t2p > 0.5) & (pop_t2p < 1.5)& (half_width_crit[:,0] == True))

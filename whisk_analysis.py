@@ -96,6 +96,8 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
             unit_latency.append(latency)
 
+        unit_latency = unit_latency[unit_latency < 20]    
+
         w2_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w2_resp_perc.append(unit_response)
         w2_latency.append(np.nanmean(unit_latency, 0))
@@ -104,6 +106,8 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
     #w1_bin_responses = [np.sum(resp[100:105]) for resp in w1_trial_counts]
     w1_spont_responses = [np.sum(resp[900:950]) for resp in w1_trial_counts]
     #w1_spont_responses = [np.sum(resp[90:95]) for resp in w1_trial_counts]
+
+    big_spont_responses = [np.sum(resp[500:900]) for resp in w1_trial_counts]
     w1_bin_responses = (np.array(w1_bin_responses) - np.array(w1_spont_responses)).tolist()
 
     w1_avg_response = np.mean(w1_bin_responses)
@@ -140,7 +144,7 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
         aw_latency = w1_latency
         aw_bin_responses = w1_bin_responses
 
-    return pw_trial_counts, pw_resp_perc, pw_latency, pw_bin_responses, aw_trial_counts, aw_resp_perc, aw_latency, aw_bin_responses, w1_avg_response, w2_avg_response, w1_spont_responses
+    return pw_trial_counts, pw_resp_perc, pw_latency, pw_bin_responses, aw_trial_counts, aw_resp_perc, aw_latency, aw_bin_responses, w1_avg_response, w2_avg_response, big_spont_responses
 
 
 def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response):
@@ -240,12 +244,12 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
         w2_resp_perc.append(unit_response)
         w2_latency.append(np.nanmean(unit_latency, 0))
 
-    w1_resp_1 = [np.sum(resp[1000:1050]) for resp in w1_trial_counts]
-    w1_resp_2 = [np.sum(resp[1100:1150]) for resp in w1_trial_counts]
-    w1_resp_3 = [np.sum(resp[1200:1250]) for resp in w1_trial_counts]
-    w1_resp_4 = [np.sum(resp[1300:1350]) for resp in w1_trial_counts]
+    w1_resp_1 = [np.sum(resp[1000:1099]) for resp in w1_trial_counts]
+    w1_resp_2 = [np.sum(resp[1100:1199]) for resp in w1_trial_counts]
+    w1_resp_3 = [np.sum(resp[1200:1299]) for resp in w1_trial_counts]
+    w1_resp_4 = [np.sum(resp[1300:1399]) for resp in w1_trial_counts]
     
-    w1_spont_responses = [np.sum(resp[900:950]) for resp in w1_trial_counts]
+    w1_spont_responses = [np.sum(resp[900:999]) for resp in w1_trial_counts]
     
     w1_resp_1 = np.array(w1_resp_1) - np.array(w1_spont_responses).tolist()
     w1_resp_2 = np.array(w1_resp_2) - np.array(w1_spont_responses).tolist()
@@ -257,12 +261,12 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
     w1_resp_3 = np.where(w1_resp_3<0, 0.001, w1_resp_3)
     w1_resp_4 = np.where(w1_resp_4<0, 0.001, w1_resp_4)
     
-    w2_resp_1 = [np.sum(resp[1000:1050]) for resp in w2_trial_counts]
-    w2_resp_2 = [np.sum(resp[1100:1150]) for resp in w2_trial_counts]
-    w2_resp_3 = [np.sum(resp[1200:1250]) for resp in w2_trial_counts]
-    w2_resp_4 = [np.sum(resp[1300:1350]) for resp in w2_trial_counts]
+    w2_resp_1 = [np.sum(resp[1000:1099]) for resp in w2_trial_counts]
+    w2_resp_2 = [np.sum(resp[1100:1199]) for resp in w2_trial_counts]
+    w2_resp_3 = [np.sum(resp[1200:1299]) for resp in w2_trial_counts]
+    w2_resp_4 = [np.sum(resp[1300:1399]) for resp in w2_trial_counts]
     
-    w2_spont_responses = [np.sum(resp[900:950]) for resp in w2_trial_counts]
+    w2_spont_responses = [np.sum(resp[900:999]) for resp in w2_trial_counts]
     
     w2_resp_1 = np.array(w2_resp_1) - np.array(w2_spont_responses).tolist()
     w2_resp_2 = np.array(w2_resp_2) - np.array(w2_spont_responses).tolist()

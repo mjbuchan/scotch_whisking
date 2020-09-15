@@ -123,9 +123,9 @@ def calculate_coupling(spikes, lfp, mua, method):
 
             for j in range(len(spikes[i])):
 
-                hist, bins = np.histogram(spikes[i][j], 1000, range = (0,10))
+              hist, bins = np.histogram(spikes[i][j], 1000, range = (0,10))
 
-                trial_count_per_unit.append(hist)
+              trial_count_per_unit.append(hist)
 
             trial_counts.append(trial_count_per_unit)
 
@@ -159,7 +159,7 @@ def calculate_coupling(spikes, lfp, mua, method):
 
         #SUM ACROSS CHANNELS 
 
-        mua_counts = (np.sum(mua_trial_counts, axis = 0))*100
+        mua_counts = (np.sum(mua_trial_counts[7:12], axis = 0))*100
 
         #smooth mua with 12sd gaussian
         for i in range(len(mua_counts)):
