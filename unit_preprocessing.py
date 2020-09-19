@@ -1,12 +1,3 @@
-# to dos
-
-# channel correlation to check depths 
-
-# improve csd measurements
-
-# paired data for comparisons 
-
-
 def load_data(date, path):
 
     import os
