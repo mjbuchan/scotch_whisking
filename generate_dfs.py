@@ -12,17 +12,18 @@ def build_dfs(date):
 
     # set paths
 
-    path = '/Volumes/Seagate Expansion Drive/PS2_backup/ChR2_ON/data'
+    path = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_ON/data'
 
-    save = '/Volumes/Seagate Expansion Drive/PS2_backup/ChR2_ON/processed_dfs'
+    save = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_ON/processed_dfs'
 
-    figsave = '/Volumes/Seagate Expansion Drive/PS2_backup/ChR2_ON/figures'
+    figsave = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_ON/figures'
 
     # load data
 
     unit_waveforms, lfp, opto_tag_10, unit_depths, spont_spikes, spont_lfp, spont_mua_spikes, single_whisk_1, single_whisk_2, quad_whisk_1, quad_whisk_2 = up.load_data(date, path)
 
-    labels = up.generate_labels(date, unit_depths)
+    labels = up.generate_labels(unit_depths)
+    dates = up.generate_dates(date, unit_depths)
 
     # calculate waveform properties
 
@@ -144,7 +145,7 @@ def build_dfs(date):
     plt.savefig(os.path.join(figsave, date, 'aw_quad_resp.svg'))
     plt.savefig(os.path.join(figsave, date, 'aw_quad_resp.png'))
 
-    data = {'label': labels, 'depths': unit_depths, 'rs': rs_units, 'fs': fs_units, 
+    data = {'date': dates, 'label': labels, 'depths': unit_depths, 'rs': rs_units, 'fs': fs_units, 
            'opto_rs': opto_rs_units, 'opto_fs': opto_fs_units, 't2p': pop_t2p,
            'half_width': pop_half_width[:,0], 'l4': l4, 'mua_coupling': unit_mua_coupling,
            'lfp_coupling': unit_lfp_coupling, 'pw_resp_perc': pw_resp_perc, 'pw_latency': pw_latency,

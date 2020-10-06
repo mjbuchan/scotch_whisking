@@ -333,12 +333,22 @@ def split_units(opto_tag, rs_units, fs_units):
     return opto_rs_units, opto_fs_units
 
 
-def generate_labels(date, unit_depths):
+def generate_labels(unit_depths):
 
     import numpy as np
 
     labels = []
 
-    [labels.append({date: np.random.randint(111111, 999999)}) for unit in unit_depths]
+    [labels.append(np.random.randint(111111, 999999)) for unit in unit_depths]
 
     return labels
+
+def generate_dates(date, unit_depths):
+
+    import numpy as np
+
+    dates = []
+
+    [dates.append(date) for unit in unit_depths]
+
+    return dates
