@@ -319,9 +319,9 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
     return pw_quad_trial_counts, aw_quad_trial_counts, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1 
 
 
-def set_data_measure(measure):
+def set_data_measure(df, opto_rs, non_opto_rs, measure):
 
-        import numpy as np
+    import numpy as np
 
     avg_opto = []
     avg_non_opto = []
@@ -334,8 +334,6 @@ def set_data_measure(measure):
         avg_opto.append(np.nanmedian(df[measure][opto_date_mask]))
         avg_non_opto.append(np.nanmedian(df[measure][non_opto_date_mask]))
 
-    plt.figure(figsize = (2,4))
-
     avg_opto = [x for x in avg_opto if str(x) != 'nan']
     avg_non_opto = [x for x in avg_non_opto if str(x) != 'nan']
 
@@ -346,9 +344,10 @@ def set_data_measure(measure):
 def plot_unit_pairs(data, bin_size, title, ylabel):
 
     import numpy as np
-    import matplotlib.pylot as plt
+    import matplotlib.pyplot as plt
     import scipy.stats as st
-        
+    import seaborn as sns
+
     data = [np.array(data[0])/bin_size, np.array(data[1])/bin_size]
     
     plt.figure(figsize = (2,4))
