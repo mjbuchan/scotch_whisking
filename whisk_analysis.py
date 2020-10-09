@@ -317,3 +317,77 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
     aw_ratio_4_1 = (aw_quad_4/aw_quad_1)*100
 
     return pw_quad_trial_counts, aw_quad_trial_counts, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1 
+
+
+def set_data_measure(measure):
+
+        import numpy as np
+
+    avg_opto = []
+    avg_non_opto = []
+
+    for dates in np.unique(df['date']):
+
+        opto_date_mask = ((df['date'] == dates) & (opto_rs == True))
+        non_opto_date_mask = ((df['date'] == dates) & (non_opto_rs == True))
+
+        avg_opto.append(np.nanmedian(df[measure][opto_date_mask]))
+        avg_non_opto.append(np.nanmedian(df[measure][non_opto_date_mask]))
+
+    plt.figure(figsize = (2,4))
+
+    avg_opto = [x for x in avg_opto if str(x) != 'nan']
+    avg_non_opto = [x for x in avg_non_opto if str(x) != 'nan']
+
+    data = [avg_opto, avg_non_opto]
+    
+    return data 
+
+def plot_unit_pairs(data, bin_size, title, ylabel):
+
+    import numpy as np
+    import matplotlib.pylot as plt
+    import scipy.stats as st
+        
+    data = [np.array(data[0])/bin_size, np.array(data[1])/bin_size]
+    
+    plt.figure(figsize = (2,4))
+
+    palette = ('limegreen', 'r')
+    x_labels = ['aIP', 'OP']
+
+    ax = sns.stripplot(data = data, size = 7, linewidth = 2, jitter = 0, palette = palette, zorder = 0)
+
+    plt.hlines(np.mean(data[0]), -.1, .1)
+    plt.hlines(np.mean(data[1]), .9, 1.1)
+
+    plt.vlines(0, np.mean(data[0])-2*st.sem(data[0]),
+                    np.mean(data[0])+2*st.sem(data[0]))
+
+    plt.vlines(1, np.mean(data[1])-2*st.sem(data[1]),
+                    np.mean(data[1])+2*st.sem(data[1]))
+
+    for points in range(len(data[0])):
+
+        plt.plot((0, 1), (data[0][points], data[1][points]), color = 'grey', alpha = 0.1)
+
+    ax.set_xticklabels(x_labels)
+
+    plt.xlim(-.5, 1.5)
+    
+    plt.title(title)
+    plt.ylabel(ylabel)
+
+    norm_0 = st.shapiro(data[0])[1]
+    norm_1 = st.shapiro(data[1])[1]
+
+    if (norm_0 > 0.05) & (norm_1 > 0.05): 
+
+        print('data normal')
+        print(st.ttest_rel(data[0], data[1]))
+
+    else: 
+
+        print('data not normal')
+        print(st.wilcoxon(data[0], data[1]))
+
