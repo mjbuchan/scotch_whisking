@@ -319,7 +319,7 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
     return pw_quad_trial_counts, aw_quad_trial_counts, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1 
 
 
-def set_data_measure(df, opto_rs, non_opto_rs, measure):
+def set_data_measure(df, opto_rs, non_opto_rs, measure, avg):
 
     import numpy as np
 
@@ -331,8 +331,16 @@ def set_data_measure(df, opto_rs, non_opto_rs, measure):
         opto_date_mask = ((df['date'] == dates) & (opto_rs == True))
         non_opto_date_mask = ((df['date'] == dates) & (non_opto_rs == True))
 
-        avg_opto.append(np.nanmedian(df[measure][opto_date_mask]))
-        avg_non_opto.append(np.nanmedian(df[measure][non_opto_date_mask]))
+        if avg == 'median':
+
+            avg_opto.append(np.nanmedian(df[measure][opto_date_mask]))
+            avg_non_opto.append(np.nanmedian(df[measure][non_opto_date_mask]))
+
+        else:
+
+            avg_opto.append(np.nanmean(df[measure][opto_date_mask]))
+            avg_non_opto.append(np.nanmean(df[measure][non_opto_date_mask]))
+
 
     avg_opto = [x for x in avg_opto if str(x) != 'nan']
     avg_non_opto = [x for x in avg_non_opto if str(x) != 'nan']
