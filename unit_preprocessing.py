@@ -12,8 +12,11 @@ def load_data(date, path):
 
     # load lfp data
 
-    lfp = loadmat(os.path.join(path, date, 'whisk_dual_single/lfp_1.mat'))
-    lfp = lfp['lfp_1']
+    lfp_1 = loadmat(os.path.join(path, date, 'whisk_dual_single/lfp_1.mat'))
+    lfp_1 = lfp_1['lfp_1']
+
+    lfp_2 = loadmat(os.path.join(path, date, 'whisk_dual_single/lfp_2.mat'))
+    lfp_2 = lfp_2['lfp_2']
 
     # load spikes from 10ms LED flash protocol
 
@@ -57,7 +60,7 @@ def load_data(date, path):
 
     print('data loaded successfully - waveform, lfp, opto, depths, spont, single whisk, quad whisk')
 
-    return unit_waveforms, lfp, opto_tag_10, unit_depths, spont_spikes, spont_lfp, spont_mua_spikes, single_whisk_1, single_whisk_2, quad_whisk_1, quad_whisk_2
+    return unit_waveforms, lfp_1, lfp_2, opto_tag_10, unit_depths, spont_spikes, spont_lfp, spont_mua_spikes, single_whisk_1, single_whisk_2, quad_whisk_1, quad_whisk_2
 
 def waveform_analysis(unit_waveforms):
 
@@ -151,7 +154,7 @@ def plot_unit_clusters(pop_t2p, pop_half_width, fs_units, rs_units):
     plt.tight_layout()
 
 
-def calculate_csd(lfp, sigma):
+def calculate_csd(lfp_1, lfp_2, sigma, pw_ID):
     
     ''' code to generate a csd and smoothed csd of 32 channel neuronexus 
         probe lfp sampled at 1000Hz
@@ -180,14 +183,28 @@ def calculate_csd(lfp, sigma):
     import neo
     from neo.core import AnalogSignal
     from quantities import ms, s, kHz, uM, uA, mm, um
+    import os
+    from scipy.io import loadmat
     
     import numpy as np
     import scipy.ndimage as nd
 
     print('imports complete')
-    
+
+    if pw_ID == 1: 
+
+        lfp = lfp_1
+
+        print('pw ID = 1, using lfp 1')
+
+    if pw_ID == 2:
+
+        lfp = lfp_2
+
+        print('pw ID = 2, using lfp 2')
+
     lfp = np.mean(lfp,axis=1)
-    lfp = lfp[:,950:1500].T
+    lfp = lfp[:,1000:1500].T
     
     c_ind = np.arange(1,33,1)
     c_space = np.arange(0,32*25, 25)
@@ -222,8 +239,8 @@ def plot_csd(csd, window_min, window_max):
     sns.heatmap(csd[window_min:window_max].T, cmap = 'coolwarm', cbar_kws={'ticks': []})
 
     plt.tight_layout()
-    plt.yticks([])
-    plt.xticks([])
+    #plt.yticks([])
+    #plt.xticks([])
 
 
 def calculate_l4(csd, depth, unit_depths):

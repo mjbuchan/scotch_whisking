@@ -134,6 +134,8 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
         aw_latency = w2_latency
         aw_bin_responses = w2_bin_responses
 
+        pw_ID = 1
+
     if w1_avg_response < w2_avg_response:
 
         pw_trial_counts = w2_trial_counts
@@ -146,7 +148,9 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
         aw_latency = w1_latency
         aw_bin_responses = w1_bin_responses
 
-    return pw_trial_counts, pw_resp_perc, pw_latency, pw_bin_responses, aw_trial_counts, aw_resp_perc, aw_latency, aw_bin_responses, w1_avg_response, w2_avg_response, big_spont_responses
+        pw_ID = 2
+
+    return pw_ID, pw_trial_counts, pw_resp_perc, pw_latency, pw_bin_responses, aw_trial_counts, aw_resp_perc, aw_latency, aw_bin_responses, w1_avg_response, w2_avg_response, big_spont_responses
 
 
 def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response):
@@ -295,6 +299,8 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
         pw_quad_trial_counts = w1_trial_counts
         aw_quad_trial_counts = w2_trial_counts
 
+        pw_ID = 1
+
     if w1_avg_response < w2_avg_response:
 
         pw_quad_1 = w2_resp_1
@@ -309,6 +315,8 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
         
         pw_quad_trial_counts = w2_trial_counts
         aw_quad_trial_counts = w1_trial_counts
+
+        pw_ID = 2
     
     pw_ratio_2_1 = (pw_quad_2/pw_quad_1)*100
     pw_ratio_4_1 = (pw_quad_4/pw_quad_1)*100
@@ -316,7 +324,7 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
     aw_ratio_2_1 = (aw_quad_2/aw_quad_1)*100
     aw_ratio_4_1 = (aw_quad_4/aw_quad_1)*100
 
-    return pw_quad_trial_counts, aw_quad_trial_counts, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1 
+    return pw_ID, pw_quad_trial_counts, aw_quad_trial_counts, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1 
 
 
 def set_data_measure(df, opto_rs, non_opto_rs, measure, avg):
