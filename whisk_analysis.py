@@ -357,6 +357,8 @@ def set_data_measure(df, opto_rs, non_opto_rs, measure, avg):
     
     return data 
 
+# Some bug here that doesn't scale with depth 
+
 def plot_unit_pairs(data, bin_size, title, ylabel):
 
     import numpy as np
