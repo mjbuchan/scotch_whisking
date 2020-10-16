@@ -338,17 +338,22 @@ def set_data_measure(df, opto_rs, non_opto_rs, measure, avg):
 
         opto_date_mask = ((df['date'] == dates) & (opto_rs == True))
         non_opto_date_mask = ((df['date'] == dates) & (non_opto_rs == True))
+        
+        if ((opto_date_mask.sum() > 0) & (non_opto_date_mask.sum() > 0)):
 
-        if avg == 'median':
+            if avg == 'median':
 
-            avg_opto.append(np.nanmedian(df[measure][opto_date_mask]))
-            avg_non_opto.append(np.nanmedian(df[measure][non_opto_date_mask]))
+                avg_opto.append(np.nanmedian(df[measure][opto_date_mask]))
+                avg_non_opto.append(np.nanmedian(df[measure][non_opto_date_mask]))
 
-        else:
+            else:
 
-            avg_opto.append(np.nanmean(df[measure][opto_date_mask]))
-            avg_non_opto.append(np.nanmean(df[measure][non_opto_date_mask]))
-
+                avg_opto.append(np.nanmean(df[measure][opto_date_mask]))
+                avg_non_opto.append(np.nanmean(df[measure][non_opto_date_mask]))
+        
+        else: 
+            
+            print(dates, 'fail')
 
     avg_opto = [x for x in avg_opto if str(x) != 'nan']
     avg_non_opto = [x for x in avg_non_opto if str(x) != 'nan']
@@ -357,7 +362,6 @@ def set_data_measure(df, opto_rs, non_opto_rs, measure, avg):
     
     return data 
 
-# Some bug here that doesn't scale with depth 
 
 def plot_unit_pairs(data, bin_size, title, ylabel):
 
@@ -407,4 +411,3 @@ def plot_unit_pairs(data, bin_size, title, ylabel):
 
         print('data not normal')
         print(st.wilcoxon(data[0], data[1]))
-

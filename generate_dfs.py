@@ -20,7 +20,7 @@ def build_dfs(date):
 
     # load data
 
-    unit_waveforms, lfp, opto_tag_10, unit_depths, spont_spikes, spont_lfp, spont_mua_spikes, single_whisk_1, single_whisk_2, quad_whisk_1, quad_whisk_2 = up.load_data(date, path)
+    unit_waveforms, lfp_1, lfp_2, opto_tag_10, unit_depths, spont_spikes, spont_lfp, spont_mua_spikes, single_whisk_1, single_whisk_2, quad_whisk_1, quad_whisk_2 = up.load_data(date, path)
 
     labels = up.generate_labels(unit_depths)
     dates = up.generate_dates(date, unit_depths)
@@ -53,23 +53,6 @@ def build_dfs(date):
     plt.savefig(os.path.join(figsave, date, 'clustered_units.svg'))
     plt.savefig(os.path.join(figsave, date, 'clustered_units.png'))
 
-    ## calculate CSD profile from electrode depths
-
-    csd, csd_smooth, depth = up.calculate_csd(lfp, 15)
-
-    # plot CSD profile ## TO DO ## make plot nicer
-
-    up.plot_csd(csd_smooth, 40, 100)
-
-    # split units into layers 
-
-    l4_top, l4_bottom, l4 = up.calculate_l4(csd_smooth, depth, unit_depths)
-
-    print('layer split complete')
-
-    plt.savefig(os.path.join(figsave, date, 'csd.svg'))
-    plt.savefig(os.path.join(figsave, date, 'csd.png'))
-
     # calculate entropy
 
     unit_entropy = spont.calculate_unit_entropy(spont_spikes)
@@ -99,51 +82,69 @@ def build_dfs(date):
 
     #perform single whisk analysis
 
-    pw_trial_counts, pw_resp_perc, pw_latency, pw_bin_responses, aw_trial_counts, aw_resp_perc, aw_latency, aw_bin_responses, w1_avg_response, w2_avg_response, big_spont_responses = whisk.dual_whisk_single_analysis(single_whisk_1, single_whisk_2)
+    pw_ID, pw_trial_counts, pw_resp_perc, pw_latency, pw_bin_responses, aw_trial_counts, aw_resp_perc, aw_latency, aw_bin_responses, w1_avg_response, w2_avg_response, big_spont_responses = whisk.dual_whisk_single_analysis(single_whisk_1, single_whisk_2)
 
     # Perform quad whisk analysis
 
-    pw_quad_trial_counts, aw_quad_trial_counts, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1  = whisk.dual_whisk_quad_analysis(quad_whisk_1, quad_whisk_2, w1_avg_response, w2_avg_response)
+    pw_ID, pw_quad_trial_counts, aw_quad_trial_counts, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1  = whisk.dual_whisk_quad_analysis(quad_whisk_1, quad_whisk_2, w1_avg_response, w2_avg_response)
 
-    plt.figure(figsize = (4,4))
 
-    plt.plot(np.mean(pw_trial_counts,0))
+     ## calculate CSD profile from electrode depths
 
-    plt.xlabel('Time (s)')
-    plt.ylabel('Spike probability')
+    csd = up.calculate_csd(lfp_1, lfp_2, 1, pw_ID)
 
-    plt.savefig(os.path.join(figsave, date, 'pw_resp.svg'))
-    plt.savefig(os.path.join(figsave, date, 'pw_resp.png'))
+    # plot CSD profile ## TO DO ## make plot nicer
 
-    plt.figure(figsize = (4,4))
+    up.plot_csd(csd, 100, date)
 
-    plt.plot(np.mean(aw_trial_counts,0))
+    # split units into layers 
 
-    plt.xlabel('Time (s)')
-    plt.ylabel('Spike probability')
+    l4_top, l4_bottom, l4 = up.calculate_l4(csd, unit_depths, date)
 
-    plt.savefig(os.path.join(figsave, date, 'aw_resp.svg'))
-    plt.savefig(os.path.join(figsave, date, 'aw_resp.png'))
+    print('layer split complete')
 
-    plt.figure(figsize = (4,4))
+    plt.savefig(os.path.join(figsave, date, 'csd.svg'))
+    plt.savefig(os.path.join(figsave, date, 'csd.png'))
 
-    plt.plot(np.mean(pw_quad_trial_counts,0))
+    # plt.figure(figsize = (4,4))
 
-    plt.xlabel('Time (s)')
-    plt.ylabel('Spike probability')
+    # plt.plot(np.mean(pw_trial_counts,0))
 
-    plt.savefig(os.path.join(figsave, date, 'pw_quad_resp.svg'))
-    plt.savefig(os.path.join(figsave, date, 'pw_quad_resp.png'))
+    # plt.xlabel('Time (s)')
+    # plt.ylabel('Spike probability')
 
-    plt.figure(figsize = (4,4))
+    # plt.savefig(os.path.join(figsave, date, 'pw_resp.svg'))
+    # plt.savefig(os.path.join(figsave, date, 'pw_resp.png'))
 
-    plt.plot(np.mean(aw_quad_trial_counts,0))
+    # plt.figure(figsize = (4,4))
 
-    plt.xlabel('Time (s)')
-    plt.ylabel('Spike probability')
+    # plt.plot(np.mean(aw_trial_counts,0))
 
-    plt.savefig(os.path.join(figsave, date, 'aw_quad_resp.svg'))
-    plt.savefig(os.path.join(figsave, date, 'aw_quad_resp.png'))
+    # plt.xlabel('Time (s)')
+    # plt.ylabel('Spike probability')
+
+    # plt.savefig(os.path.join(figsave, date, 'aw_resp.svg'))
+    # plt.savefig(os.path.join(figsave, date, 'aw_resp.png'))
+
+    # plt.figure(figsize = (4,4))
+
+    # plt.plot(np.mean(pw_quad_trial_counts,0))
+
+    # plt.xlabel('Time (s)')
+    # plt.ylabel('Spike probability')
+
+    # plt.savefig(os.path.join(figsave, date, 'pw_quad_resp.svg'))
+    # plt.savefig(os.path.join(figsave, date, 'pw_quad_resp.png'))
+
+    # plt.figure(figsize = (4,4))
+
+    # plt.plot(np.mean(aw_quad_trial_counts,0))
+
+    # plt.xlabel('Time (s)')
+    # plt.ylabel('Spike probability')
+
+    # plt.savefig(os.path.join(figsave, date, 'aw_quad_resp.svg'))
+    # plt.savefig(os.path.join(figsave, date, 'aw_quad_resp.png'))
 
     data = {'date': dates, 'label': labels, 'depths': unit_depths, 'rs': rs_units, 'fs': fs_units, 
            'opto_rs': opto_rs_units, 'opto_fs': opto_fs_units, 't2p': pop_t2p,

@@ -154,43 +154,12 @@ def plot_unit_clusters(pop_t2p, pop_half_width, fs_units, rs_units):
     plt.tight_layout()
 
 
+
 def calculate_csd(lfp_1, lfp_2, sigma, pw_ID):
     
-    ''' code to generate a csd and smoothed csd of 32 channel neuronexus 
-        probe lfp sampled at 1000Hz
-        
-        makes use of elephant resources
-        
-        inputs: 'lfp' - channels by samples array... currently bit hacky 
-                but expects a whisk at 1s, hence the slice from 950:1500
-                
-                this is converted into neo format for use in elephant csd 
-                function
-        
-                'sigma' - what size of sigma to smooth the csd with. 15 
-                works well.
-                
-        outputs: 'csd' - array of csd profile
-                 
-                 'csd_smooth' - smoothed array of csd profile for plotting
-                 
-                 'depth' - depth corresponding to probe locations in um
-        
-        Matt Buchan mostly stolen from Gemma Gothard // Akerman Lab - Aug 2020
-    '''
-    
-    import elephant
-    import neo
-    from neo.core import AnalogSignal
-    from quantities import ms, s, kHz, uM, uA, mm, um
-    import os
-    from scipy.io import loadmat
-    
-    import numpy as np
     import scipy.ndimage as nd
-
-    print('imports complete')
-
+    import numpy as np
+    
     if pw_ID == 1: 
 
         lfp = lfp_1
@@ -203,81 +172,59 @@ def calculate_csd(lfp_1, lfp_2, sigma, pw_ID):
 
         print('pw ID = 2, using lfp 2')
 
-    lfp = np.mean(lfp,axis=1)
-    lfp = lfp[:,1000:1500].T
+    csd = np.gradient(np.mean(lfp,1))
+               
+    csd = nd.gaussian_filter(csd[0], sigma)
     
-    c_ind = np.arange(1,33,1)
-    c_space = np.arange(0,32*25, 25)
-    c_space = c_space[:, np.newaxis]
-    
-    neo_lfp = AnalogSignal(lfp, units = 'uV', sampling_period = 1*ms, channel_index = c_ind)
-    
-    print('calculating csd')
-    
-    csd = elephant.current_source_density.estimate_csd(neo_lfp, coords=c_space*um, method='KCSD1D', process_estimate=True)
-    
-    csd_smooth = nd.gaussian_filter(csd, sigma = sigma)
-    
-    depth = np.round(csd.annotations['x_coords']*1000)
-    
-    return csd, csd_smooth, depth 
+    return csd  
 
 
-def plot_csd(csd, window_min, window_max):
+def plot_csd(csd, window, date):
 
-    import matplotlib.pyplot as plt 
+    import matplotlib.pyplot as plt
     import seaborn as sns
     
-    '''
-    Plots csd profile within certain window, use 40:100 for 3s single whisk
-    trial
+    plt.figure(figsize = (2,6))
+
+    cbar_kws = {"orientation":"horizontal", 'aspect': 5, 'ticks': []
+               }
+    sns.heatmap(csd[:,1005:1005+window], cmap = 'jet', vmin=-100, vmax=100, cbar_kws = cbar_kws)
+
+    plt.yticks([])
+    plt.xticks([])
+
+    plt.title(date)
     
-    Matt Buchan // Akerman Lab - Aug 2020
-    '''
-
-    plt.figure(figsize = (2,4))
-    sns.heatmap(csd[window_min:window_max].T, cmap = 'coolwarm', cbar_kws={'ticks': []})
-
     plt.tight_layout()
-    #plt.yticks([])
-    #plt.xticks([])
 
 
-def calculate_l4(csd, depth, unit_depths):
+
+def calculate_l4(csd, unit_depths, date):
 
     import numpy as np
+
+    avg = np.mean(csd[:, 1010:1011],1)[:22]
     
-    ''' calculates likely position of l4 based on 125um boundary on
-        either side of the largest current sink, which (in theory) is l4
-        
-        inputs: "csd" - csd profile calculated by function "calculate csd"
-        
-                "depth" - depth profile calculated by function "calculate csd"
-
-                "unit_depths" - depths of sorted units
-                
-        outputs: "l4_top" - top boundary of L4
-
-                 "l4_bottom" - bottom boundary of L4
-
-                 "l4" - boolean mask for sorted units
-                 
-        Matt Buchan // Akerman Lab - Aug 2020
-        '''
-
-    avg_csd = np.mean(csd, 0)
-    sink_idx = np.argmin(avg_csd)
-    sink_depth = depth[sink_idx]
-
-    l4_top = 800 - sink_depth + 150
-    l4_bottom = 800 - sink_depth - 150
-
-    print('l4_top =', l4_top, 'um')
-    print('l4_bottom =', l4_bottom, 'um')
-
-    l4 = ((unit_depths < l4_top) & (unit_depths > l4_bottom) )
+    sink_channels = [i for i,v in enumerate(avg) if v > 0]
+    
+    if sink_channels[0] == 0:
+        l4_top = 800-(sink_channels[3]*25)
+    
+    if sink_channels[0] != 0:
+    
+        l4_top = 800-(sink_channels[3]*25)
+    
+    l4_bottom = 800-(sink_channels[-2]*25)
+    
+    print(date, 'sink channels', sink_channels)
+    print(date, 'l4 top', l4_top, 'um')
+    print(date, 'l4 bottom', l4_bottom, 'um')
+    
+    l4 = ((unit_depths < l4_top) & (unit_depths > l4_bottom))
     
     return l4_top, l4_bottom, l4
+
+
 
 
 def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
