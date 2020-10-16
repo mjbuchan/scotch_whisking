@@ -29,13 +29,13 @@ def build_dfs(date):
 
     pop_t2p, pop_trough_val, pop_peak_val, pop_half_width = up.waveform_analysis(unit_waveforms)
 
-    print('waveform analysis complete')
+    #print('waveform analysis complete')
 
     # cluster into putative fs and rs units
 
     fs_units, rs_units = up.cluster_units(pop_t2p, pop_half_width)
 
-    print('clustering complete')
+    #print('clustering complete')
 
     # plot kde of clusters with arbitrary .55 cut-off
 
@@ -47,8 +47,8 @@ def build_dfs(date):
         
         print('not enough fs units for plot')
 
-    print('fs units:', fs_units.sum())
-    print('rs units:', rs_units.sum())
+    #print('fs units:', fs_units.sum())
+    #print('rs units:', rs_units.sum())
 
     plt.savefig(os.path.join(figsave, date, 'clustered_units.svg'))
     plt.savefig(os.path.join(figsave, date, 'clustered_units.png'))
@@ -61,13 +61,13 @@ def build_dfs(date):
 
     opto_trial_counts, opto_resp_perc, opto_tag, opto_bin_responses = up.perform_opto_tag(opto_tag_10, 3000, 20, 3, 50)
 
-    print('optotag complete')
+    #print('optotag complete')
 
     # split units into fs and rs opto tags
 
     opto_rs_units, opto_fs_units = up.split_units(opto_tag, rs_units, fs_units)
 
-    print('unit split complete')
+    #print('unit split complete')
 
     # perform coupling analysis
 
@@ -99,9 +99,9 @@ def build_dfs(date):
 
     # split units into layers 
 
-    l4_top, l4_bottom, l4 = up.calculate_l4(csd, unit_depths, date)
+    l4_top, l4_bottom, l4, l23_top, l23_bottom, l23 = up.calculate_l4(csd, unit_depths, date, 'spec')
 
-    print('layer split complete')
+    #print('layer split complete')
 
     plt.savefig(os.path.join(figsave, date, 'csd.svg'))
     plt.savefig(os.path.join(figsave, date, 'csd.png'))
@@ -148,7 +148,7 @@ def build_dfs(date):
 
     data = {'date': dates, 'label': labels, 'depths': unit_depths, 'rs': rs_units, 'fs': fs_units, 
            'opto_rs': opto_rs_units, 'opto_fs': opto_fs_units, 't2p': pop_t2p,
-           'half_width': pop_half_width[:,0], 'l4': l4, 'mua_coupling': unit_mua_coupling,
+           'half_width': pop_half_width[:,0], 'l4': l4, 'l23': l23, 'mua_coupling': unit_mua_coupling,
            'lfp_coupling': unit_lfp_coupling, 'pw_resp_perc': pw_resp_perc, 'pw_latency': pw_latency,
            'pw_bin_resp': pw_bin_responses, 'aw_resp_perc': aw_resp_perc, 'aw_latency': aw_latency,
            'aw_bin_resp': aw_bin_responses, 'pw_1': pw_quad_1, 'pw_2': pw_quad_2, 'pw_3': pw_quad_3,

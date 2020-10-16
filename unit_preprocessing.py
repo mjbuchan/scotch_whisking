@@ -148,10 +148,13 @@ def plot_unit_clusters(pop_t2p, pop_half_width, fs_units, rs_units):
 
     red = sns.color_palette("Reds")[-2]
     blue = sns.color_palette("Blues")[-2]
-    plt.text(0.025, 0.4, "fast-spiking", size=12, color=red)
-    plt.text(0.8, 0.8, "regular-spiking", size=12, color=blue)
+    plt.text(0.025, 0.4, "Fast-spiking", size=10, color=red)
+    plt.text(0.8, 0.8, "Regular-spiking", size=10, color=blue)
 
-    plt.tight_layout()
+    print('fs units:', fs_units.sum())
+    print('rs units:', rs_units.sum())
+
+    #plt.tight_layout()
 
 
 
@@ -190,7 +193,7 @@ def plot_csd(csd, window, date):
                }
     sns.heatmap(csd[:,1005:1005+window], cmap = 'jet', vmin=-100, vmax=100, cbar_kws = cbar_kws)
 
-    plt.yticks([])
+    #plt.yticks([])
     plt.xticks([])
 
     plt.title(date)
@@ -199,30 +202,96 @@ def plot_csd(csd, window, date):
 
 
 
-def calculate_l4(csd, unit_depths, date):
+def calculate_l4(csd, unit_depths, date, method):
 
     import numpy as np
 
     avg = np.mean(csd[:, 1010:1011],1)[:22]
     
     sink_channels = [i for i,v in enumerate(avg) if v > 0]
+
+    sink_max = np.argmax(np.mean(csd[:, 1010:1011],1)[:22])
     
-    if sink_channels[0] == 0:
-        l4_top = 800-(sink_channels[3]*25)
-    
-    if sink_channels[0] != 0:
-    
-        l4_top = 800-(sink_channels[3]*25)
-    
-    l4_bottom = 800-(sink_channels[-2]*25)
-    
+    if method == 'auto_max':
+
+        l4_top = 800 - (sink_max-4)*25
+        l4_bottom = 800 - (sink_max+4)*25
+
+    if method == 'auto_bound':
+
+        if sink_channels[0] == 0:
+            l4_top = 800-(sink_channels[4]*25)
+        
+        if sink_channels[0] != 0:
+        
+            l4_top = 800-(sink_channels[3]*25)
+        
+        l4_bottom = 800-(sink_channels[-3]*25)
+
+        l4_top = 800-(sink_max*25)+75
+        l4_bottom = 800-(sink_max*25)-75
+
+    if method == 'manual':
+
+        if date == '2020_06_23_1':
+
+            l4_top = 800-(0*25)
+            l4_bottom = 800-(3*25)
+
+        if date == '2020_06_23_2':
+
+            l4_top = 800-(9*25)
+            l4_bottom = 800-(15*25)
+
+        if date == '2020_06_24_1':
+
+            l4_top = 800-(9*25)
+            l4_bottom = 800-(18*25)
+
+        if date == '2020_06_24_2':
+
+            l4_top = 800-(9*25)
+            l4_bottom = 800-(18*25)
+
+        if date == '2020_06_26':
+
+            l4_top = 800-(9*25)
+            l4_bottom = 800-(18*25)
+
+        if date == '2020_06_27':
+
+            l4_top = 800-(12*25)
+            l4_bottom = 800-(20*25)
+
+        if date == '2020_06_28':
+
+            l4_top = 800-(0*25)
+            l4_bottom = 800-(12*25)
+
+        if date == '2020_06_29':
+
+            l4_top = 800-(9*25)
+            l4_bottom = 800-(18*25)
+
+    if method == 'spec':
+
+        l4_top = 500
+        l4_bottom = 350
+
+    l23_bottom = l4_top
+
+    l23_top = l4_top + 200
+
     print(date, 'sink channels', sink_channels)
+    print(date, 'sink_max', sink_max)
     print(date, 'l4 top', l4_top, 'um')
     print(date, 'l4 bottom', l4_bottom, 'um')
     
     l4 = ((unit_depths < l4_top) & (unit_depths > l4_bottom))
+
+    l23 = ((unit_depths < l23_top) & (unit_depths > l23_bottom))
     
-    return l4_top, l4_bottom, l4
+    return l4_top, l4_bottom, l4, l23_top, l23_bottom, l23
 
 
 

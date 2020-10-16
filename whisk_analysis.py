@@ -53,11 +53,18 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
             unit_latency.append(latency)
 
-        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.007)].tolist() 
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.2) & (np.array(unit_latency) > 0.006)].tolist() 
 
         w1_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w1_resp_perc.append(unit_response)
-        w1_latency.append(np.nanmean(unit_latency))
+
+        if np.array(unit_latency).sum() > 0: 
+
+            w1_latency.append(min(unit_latency))
+
+        else: 
+
+            w1_latency.append(float('Nan'))
 
     w2_trial_counts = []
     w2_resp_perc = []
@@ -98,11 +105,18 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
             unit_latency.append(latency)
 
-        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.007)].tolist()    
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.2) & (np.array(unit_latency) > 0.006)].tolist()    
 
         w2_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w2_resp_perc.append(unit_response)
-        w2_latency.append(np.nanmean(unit_latency, 0))
+        
+        if np.array(unit_latency).sum() > 0: 
+
+            w2_latency.append(min(unit_latency))
+
+        else: 
+
+            w2_latency.append(float('Nan'))
 
     w1_bin_responses = [np.sum(resp[1000:1050]) for resp in w1_trial_counts]
     #w1_bin_responses = [np.sum(resp[100:105]) for resp in w1_trial_counts]
@@ -194,7 +208,7 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
 
             unit_trial_count.append(hist)
 
-            if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.05)).sum() > 0:
+            if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.099)).sum() > 0:
 
                 latency = min(i for i in spike_times[trial] if i > 1)
 
@@ -208,7 +222,7 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
 
         w1_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w1_resp_perc.append(unit_response)
-        w1_latency.append(np.nanmean(unit_latency))
+        w1_latency.append(min(unit_latency))
 
     w2_trial_counts = []
     w2_resp_perc = []
@@ -234,7 +248,7 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
 
             unit_trial_count.append(hist)
 
-            if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.05)).sum() > 0:
+            if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.099)).sum() > 0:
 
                 latency = min(i for i in spike_times[trial] if i > 1)
 
@@ -327,9 +341,10 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
     return pw_ID, pw_quad_trial_counts, aw_quad_trial_counts, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1 
 
 
-def set_data_measure(df, opto_rs, non_opto_rs, measure, avg):
+def set_data_measure(df, opto_rs, non_opto_rs, measure, avg_type):
 
     import numpy as np
+    import scipy.stats as st
 
     avg_opto = []
     avg_non_opto = []
@@ -338,19 +353,19 @@ def set_data_measure(df, opto_rs, non_opto_rs, measure, avg):
 
         opto_date_mask = ((df['date'] == dates) & (opto_rs == True))
         non_opto_date_mask = ((df['date'] == dates) & (non_opto_rs == True))
-        
+
         if ((opto_date_mask.sum() > 0) & (non_opto_date_mask.sum() > 0)):
 
-            if avg == 'median':
+            if avg_type == 'median':
 
                 avg_opto.append(np.nanmedian(df[measure][opto_date_mask]))
                 avg_non_opto.append(np.nanmedian(df[measure][non_opto_date_mask]))
-
+            
             else:
 
                 avg_opto.append(np.nanmean(df[measure][opto_date_mask]))
                 avg_non_opto.append(np.nanmean(df[measure][non_opto_date_mask]))
-        
+
         else: 
             
             print(dates, 'fail')
@@ -382,11 +397,11 @@ def plot_unit_pairs(data, bin_size, title, ylabel):
     plt.hlines(np.mean(data[0]), -.1, .1)
     plt.hlines(np.mean(data[1]), .9, 1.1)
 
-    plt.vlines(0, np.mean(data[0])-2*st.sem(data[0]),
-                    np.mean(data[0])+2*st.sem(data[0]))
+    plt.vlines(0, np.mean(data[0])-st.sem(data[0]),
+                    np.mean(data[0])+st.sem(data[0]))
 
-    plt.vlines(1, np.mean(data[1])-2*st.sem(data[1]),
-                    np.mean(data[1])+2*st.sem(data[1]))
+    plt.vlines(1, np.mean(data[1])-st.sem(data[1]),
+                    np.mean(data[1])+st.sem(data[1]))
 
     for points in range(len(data[0])):
 
