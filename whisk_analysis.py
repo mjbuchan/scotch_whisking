@@ -53,7 +53,7 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
             unit_latency.append(latency)
 
-        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.2) & (np.array(unit_latency) > 0.006)].tolist() 
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.1) & (np.array(unit_latency) > 0.007)].tolist() 
 
         w1_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w1_resp_perc.append(unit_response)
@@ -105,7 +105,7 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
             unit_latency.append(latency)
 
-        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.2) & (np.array(unit_latency) > 0.006)].tolist()    
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.1) & (np.array(unit_latency) > 0.007)].tolist()    
 
         w2_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w2_resp_perc.append(unit_response)
@@ -220,9 +220,18 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
 
             unit_latency.append(latency)
 
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.1) & (np.array(unit_latency) > 0.007)].tolist() 
+
         w1_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w1_resp_perc.append(unit_response)
-        w1_latency.append(min(unit_latency))
+        
+        if np.array(unit_latency).sum() > 0: 
+
+            w1_latency.append(min(unit_latency))
+
+        else: 
+
+            w1_latency.append(float('Nan'))
 
     w2_trial_counts = []
     w2_resp_perc = []
@@ -260,9 +269,19 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
 
             unit_latency.append(latency)
 
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.1) & (np.array(unit_latency) > 0.007)].tolist() 
+
         w2_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w2_resp_perc.append(unit_response)
-        w2_latency.append(np.nanmean(unit_latency, 0))
+        
+        if np.array(unit_latency).sum() > 0: 
+
+            w2_latency.append(min(unit_latency))
+
+        else: 
+
+            w2_latency.append(float('Nan'))
+            
 
     w1_resp_1 = [np.sum(resp[1000:1050]) for resp in w1_trial_counts]
     w1_resp_2 = [np.sum(resp[1100:1150]) for resp in w1_trial_counts]
@@ -313,6 +332,9 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
         pw_quad_trial_counts = w1_trial_counts
         aw_quad_trial_counts = w2_trial_counts
 
+        pw_1_latency = w1_latency
+        aw_1_latency = w2_latency
+
         pw_ID = 1
 
     if w1_avg_response < w2_avg_response:
@@ -330,6 +352,9 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
         pw_quad_trial_counts = w2_trial_counts
         aw_quad_trial_counts = w1_trial_counts
 
+        pw_1_latency = w2_latency
+        aw_1_latency = w1_latency
+
         pw_ID = 2
     
     pw_ratio_2_1 = (pw_quad_2/pw_quad_1)*100
@@ -338,7 +363,7 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
     aw_ratio_2_1 = (aw_quad_2/aw_quad_1)*100
     aw_ratio_4_1 = (aw_quad_4/aw_quad_1)*100
 
-    return pw_ID, pw_quad_trial_counts, aw_quad_trial_counts, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1 
+    return pw_ID, pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1 
 
 
 def set_data_measure(df, opto_rs, non_opto_rs, measure, avg_type):

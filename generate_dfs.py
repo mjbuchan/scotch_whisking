@@ -86,7 +86,7 @@ def build_dfs(date):
 
     # Perform quad whisk analysis
 
-    pw_ID, pw_quad_trial_counts, aw_quad_trial_counts, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1  = whisk.dual_whisk_quad_analysis(quad_whisk_1, quad_whisk_2, w1_avg_response, w2_avg_response)
+    pw_ID, pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1  = whisk.dual_whisk_quad_analysis(quad_whisk_1, quad_whisk_2, w1_avg_response, w2_avg_response)
 
 
      ## calculate CSD profile from electrode depths
@@ -149,8 +149,8 @@ def build_dfs(date):
     data = {'date': dates, 'label': labels, 'depths': unit_depths, 'rs': rs_units, 'fs': fs_units, 
            'opto_rs': opto_rs_units, 'opto_fs': opto_fs_units, 't2p': pop_t2p,
            'half_width': pop_half_width[:,0], 'l4': l4, 'l23': l23, 'mua_coupling': unit_mua_coupling,
-           'lfp_coupling': unit_lfp_coupling, 'pw_resp_perc': pw_resp_perc, 'pw_latency': pw_latency,
-           'pw_bin_resp': pw_bin_responses, 'aw_resp_perc': aw_resp_perc, 'aw_latency': aw_latency,
+           'lfp_coupling': unit_lfp_coupling, 'pw_resp_perc': pw_resp_perc, 'pw_latency': pw_latency, 'pw_1_latency': pw_1_latency, 
+           'pw_bin_resp': pw_bin_responses, 'aw_resp_perc': aw_resp_perc, 'aw_latency': aw_latency, 'aw_1_latency': aw_1_latency,
            'aw_bin_resp': aw_bin_responses, 'pw_1': pw_quad_1, 'pw_2': pw_quad_2, 'pw_3': pw_quad_3,
            'pw_4': pw_quad_4, 'aw_1': aw_quad_1, 'aw_2': aw_quad_2, 'aw_3': aw_quad_3,'aw_4': aw_quad_4,
            'opto_resp_perc': opto_resp_perc, 'opto_bin_resp': opto_bin_responses, 'spont_resp': big_spont_responses,
