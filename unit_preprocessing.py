@@ -135,26 +135,26 @@ def plot_unit_clusters(pop_t2p, pop_half_width, fs_units, rs_units):
 
     plt.figure(figsize = (4,4))
 
-    sns.kdeplot(pop_t2p[fs_units], pop_half_width[fs_units], cmap = 'Reds', shade = True, shade_lowest = False)
-    sns.kdeplot(pop_t2p[rs_units], pop_half_width[rs_units], cmap = 'Blues', shade = True, shade_lowest = False)
+    sns.kdeplot(pop_t2p[fs_units], pop_half_width[fs_units], cmap = 'Greys', shade = False, shade_lowest = False)
+    sns.kdeplot(pop_t2p[rs_units], pop_half_width[rs_units], cmap = 'Purples', shade = False, shade_lowest = False)
 
     plt.xlim(0, 1.5)
     plt.ylim(0,1)
 
-    plt.xlabel('Trough to peak time (ms)')
-    plt.ylabel('Half amplitude duration (ms)')
+    plt.xlabel('Trough to peak (ms)')
+    plt.ylabel('Half amplitude (ms)')
 
-    plt.vlines(0.5, 0, 1, ls = ':', color = 'grey')
+    #plt.vlines(0.5, 0, 1, ls = ':', color = 'grey')
 
-    red = sns.color_palette("Reds")[-2]
-    blue = sns.color_palette("Blues")[-2]
-    plt.text(0.025, 0.4, "Fast-spiking", size=10, color=red)
-    plt.text(0.8, 0.8, "Regular-spiking", size=10, color=blue)
+    red = sns.color_palette("Greys")[-2]
+    blue = sns.color_palette("Purples")[-2]
+    plt.text(0.025, 0.4, "Fast-spiking", size=12, color=red)
+    plt.text(0.6, 0.8, "Regular-spiking", size=12, color=blue)
 
     print('fs units:', fs_units.sum())
     print('rs units:', rs_units.sum())
 
-    #plt.tight_layout()
+    plt.tight_layout()
 
 
 
@@ -193,7 +193,7 @@ def plot_csd(csd, window, date):
                }
     sns.heatmap(csd[:,1005:1005+window], cmap = 'jet', vmin=-100, vmax=100, cbar_kws = cbar_kws)
 
-    #plt.yticks([])
+    plt.yticks([])
     plt.xticks([])
 
     plt.title(date)
@@ -324,6 +324,7 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
 
     opto_trial_counts = []
     opto_resp_perc = []
+    opto_latency = []
 
     for neuron in range(len(data)):
 
@@ -332,6 +333,8 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
         unit_trial_count = []
 
         unit_response = 0
+
+        unit_latency = []
 
         for trial in range(len(data[neuron])):
 
@@ -343,8 +346,32 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
 
             unit_trial_count.append(hist)
 
+            if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.099)).sum() > 0:
+            #if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.01)).sum() > 0:
+
+
+                latency = min(i for i in spike_times[trial] if i > 1)
+
+                latency = latency - 1
+
+            else: 
+
+                latency = float('NaN')
+
+            unit_latency.append(latency)
+
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.002)].tolist() 
+
         opto_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         opto_resp_perc.append(unit_response)
+
+        if np.array(unit_latency).sum() > 0: 
+
+            opto_latency.append(min(unit_latency))
+
+        else: 
+
+            opto_latency.append(float('Nan'))
 
 
 
@@ -355,7 +382,7 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
     
     opto_tag = ((np.asarray(opto_resp_perc) >= 15) | (np.asarray(opto_bin_responses) >= 1))
 
-    return opto_trial_counts, opto_resp_perc, opto_tag, opto_bin_responses
+    return opto_trial_counts, opto_resp_perc, opto_tag, opto_bin_responses, opto_latency
 
 
 def split_units(opto_tag, rs_units, fs_units):
