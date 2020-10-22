@@ -412,9 +412,9 @@ def plot_unit_pairs(data, bin_size, title, ylabel):
 
     data = [np.array(data[0])/bin_size, np.array(data[1])/bin_size]
     
-    plt.figure(figsize = (2,4))
+    plt.figure(figsize = (1.5,4))
 
-    palette = ('limegreen', 'r')
+    palette = ('limegreen', 'grey')
     x_labels = ['aIP', 'OP']
 
     ax = sns.stripplot(data = data, size = 7, linewidth = 2, jitter = 0, palette = palette, zorder = 0)
@@ -451,3 +451,5 @@ def plot_unit_pairs(data, bin_size, title, ylabel):
 
         print('data not normal')
         print(st.wilcoxon(data[0], data[1]))
+
+    #plt.tight_layout()

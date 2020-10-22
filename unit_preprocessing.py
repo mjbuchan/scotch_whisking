@@ -135,8 +135,8 @@ def plot_unit_clusters(pop_t2p, pop_half_width, fs_units, rs_units):
 
     plt.figure(figsize = (4,4))
 
-    sns.kdeplot(pop_t2p[fs_units], pop_half_width[fs_units], cmap = 'Greys', shade = False, shade_lowest = False)
-    sns.kdeplot(pop_t2p[rs_units], pop_half_width[rs_units], cmap = 'Purples', shade = False, shade_lowest = False)
+    sns.kdeplot(pop_t2p[fs_units], pop_half_width[fs_units], cmap = 'Greys', shade = True, shade_lowest = False)
+    sns.kdeplot(pop_t2p[rs_units], pop_half_width[rs_units], cmap = 'Blues', shade = True, shade_lowest = False)
 
     plt.xlim(0, 1.5)
     plt.ylim(0,1)
@@ -147,9 +147,11 @@ def plot_unit_clusters(pop_t2p, pop_half_width, fs_units, rs_units):
     #plt.vlines(0.5, 0, 1, ls = ':', color = 'grey')
 
     red = sns.color_palette("Greys")[-2]
-    blue = sns.color_palette("Purples")[-2]
-    plt.text(0.025, 0.4, "Fast-spiking", size=12, color=red)
-    plt.text(0.6, 0.8, "Regular-spiking", size=12, color=blue)
+    blue = sns.color_palette("Blues")[-2]
+    plt.text(0.025, 0.5, "Fast-spiking", size=12, color=red)
+    plt.text(0.125, 0.4, "n = 47", size=12, color=red)
+    plt.text(0.6, 0.9, "Regular-spiking", size=12, color=blue)
+    plt.text(0.8, 0.8, "n = 186", size=12, color=blue)
 
     print('fs units:', fs_units.sum())
     print('rs units:', rs_units.sum())
