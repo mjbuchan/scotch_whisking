@@ -66,6 +66,51 @@ def load_data(date, path):
 
     return unit_waveforms, lfp_1, lfp_2, opto_tag_10, unit_depths, spont_spikes, spont_lfp, spont_mua_spikes, single_whisk_1, single_whisk_2, quad_whisk_1, quad_whisk_2
 
+def load_freq_data(path, date):
+    
+    import os
+    from scipy.io import loadmat
+    import numpy as np
+    
+    spikes_1_1 = loadmat(os.path.join(path, date, 'frequency/spikes_1_1'))
+    spikes_1_1 = spikes_1_1['spikes_1_1']
+    
+    spikes_1_2 = loadmat(os.path.join(path, date, 'frequency/spikes_1_2'))
+    spikes_1_2 = spikes_1_2['spikes_1_2']
+                         
+    spikes_1_3 = loadmat(os.path.join(path, date, 'frequency/spikes_1_3'))
+    spikes_1_3 = spikes_1_3['spikes_1_3']
+    
+    spikes_1_4 = loadmat(os.path.join(path, date, 'frequency/spikes_1_4'))
+    spikes_1_4 = spikes_1_4['spikes_1_4']
+                         
+    spikes_1_5 = loadmat(os.path.join(path, date, 'frequency/spikes_1_5'))
+    spikes_1_5 = spikes_1_5['spikes_1_5']
+                         
+    freq_spikes_1 = [spikes_1_1, spikes_1_2, spikes_1_3, spikes_1_4, spikes_1_5]
+                         
+
+
+    spikes_2_1 = loadmat(os.path.join(path, date, 'frequency/spikes_2_1'))
+    spikes_2_1 = spikes_2_1['spikes_2_1']
+    
+    spikes_2_2 = loadmat(os.path.join(path, date, 'frequency/spikes_2_2'))
+    spikes_2_2 = spikes_2_2['spikes_2_2']
+                         
+    spikes_2_3 = loadmat(os.path.join(path, date, 'frequency/spikes_2_3'))
+    spikes_2_3 = spikes_2_3['spikes_2_3']
+    
+    spikes_2_4 = loadmat(os.path.join(path, date, 'frequency/spikes_2_4'))
+    spikes_2_4 = spikes_2_4['spikes_2_4']
+                         
+    spikes_2_5 = loadmat(os.path.join(path, date, 'frequency/spikes_2_5'))
+    spikes_2_5 = spikes_2_5['spikes_2_5']
+                         
+    freq_spikes_2 = [spikes_1_1, spikes_1_2, spikes_1_3, spikes_1_4, spikes_1_5]
+                         
+    return freq_spikes_1, freq_spikes_2
+
+
 def waveform_analysis(unit_waveforms):
 
     '''

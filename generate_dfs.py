@@ -25,6 +25,8 @@ def build_dfs(date):
     labels = up.generate_labels(unit_depths)
     dates = up.generate_dates(date, unit_depths)
 
+    freq_spikes_1, freq_spikes_2 = up.load_freq_data(path,date)
+
     # calculate waveform properties
 
     pop_t2p, pop_trough_val, pop_peak_val, pop_half_width = up.waveform_analysis(unit_waveforms)
@@ -88,6 +90,9 @@ def build_dfs(date):
 
     pw_ID, pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1  = whisk.dual_whisk_quad_analysis(quad_whisk_1, quad_whisk_2, w1_avg_response, w2_avg_response)
 
+    #perform frequency analysis
+
+    pw_freq_counts, aw_freq_counts = whisk.frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_response)
 
      ## calculate CSD profile from electrode depths
 
@@ -106,45 +111,7 @@ def build_dfs(date):
     plt.savefig(os.path.join(figsave, date, 'csd.svg'))
     plt.savefig(os.path.join(figsave, date, 'csd.png'))
 
-    # plt.figure(figsize = (4,4))
-
-    # plt.plot(np.mean(pw_trial_counts,0))
-
-    # plt.xlabel('Time (s)')
-    # plt.ylabel('Spike probability')
-
-    # plt.savefig(os.path.join(figsave, date, 'pw_resp.svg'))
-    # plt.savefig(os.path.join(figsave, date, 'pw_resp.png'))
-
-    # plt.figure(figsize = (4,4))
-
-    # plt.plot(np.mean(aw_trial_counts,0))
-
-    # plt.xlabel('Time (s)')
-    # plt.ylabel('Spike probability')
-
-    # plt.savefig(os.path.join(figsave, date, 'aw_resp.svg'))
-    # plt.savefig(os.path.join(figsave, date, 'aw_resp.png'))
-
-    # plt.figure(figsize = (4,4))
-
-    # plt.plot(np.mean(pw_quad_trial_counts,0))
-
-    # plt.xlabel('Time (s)')
-    # plt.ylabel('Spike probability')
-
-    # plt.savefig(os.path.join(figsave, date, 'pw_quad_resp.svg'))
-    # plt.savefig(os.path.join(figsave, date, 'pw_quad_resp.png'))
-
-    # plt.figure(figsize = (4,4))
-
-    # plt.plot(np.mean(aw_quad_trial_counts,0))
-
-    # plt.xlabel('Time (s)')
-    # plt.ylabel('Spike probability')
-
-    # plt.savefig(os.path.join(figsave, date, 'aw_quad_resp.svg'))
-    # plt.savefig(os.path.join(figsave, date, 'aw_quad_resp.png'))
+    #build dataframe
 
     data = {'date': dates, 'label': labels, 'depths': unit_depths, 'rs': rs_units, 'fs': fs_units, 
            'opto_rs': opto_rs_units, 'opto_fs': opto_fs_units, 't2p': pop_t2p,
@@ -154,7 +121,13 @@ def build_dfs(date):
            'aw_bin_resp': aw_bin_responses, 'pw_1': pw_quad_1, 'pw_2': pw_quad_2, 'pw_3': pw_quad_3,
            'pw_4': pw_quad_4, 'aw_1': aw_quad_1, 'aw_2': aw_quad_2, 'aw_3': aw_quad_3,'aw_4': aw_quad_4,
            'opto_resp_perc': opto_resp_perc, 'opto_bin_resp': opto_bin_responses, 'spont_resp': big_spont_responses,
-           'stpr_1st': stpr_1st_half, 'stpr_2nd': stpr_2nd_half, 'entropy': unit_entropy, 'opto_latency': opto_latency}
+           'stpr_1st': stpr_1st_half, 'stpr_2nd': stpr_2nd_half, 'entropy': unit_entropy, 'opto_latency': opto_latency,
+           'pw_freq_4': pw_freq_counts[0], 'pw_freq_8': pw_freq_counts[1], 'pw_freq_12': pw_freq_counts[2], 'pw_freq_16': pw_freq_counts[3],'pw_freq_20': pw_freq_counts[4],
+           'aw_freq_4': aw_freq_counts[0], 'aw_freq_8': aw_freq_counts[1], 'aw_freq_12': aw_freq_counts[2], 'aw_freq_16': aw_freq_counts[3],'aw_freq_20': aw_freq_counts[4]
+           
+           
+        
+           }
 
 
     import pandas as pd

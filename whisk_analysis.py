@@ -453,3 +453,67 @@ def plot_unit_pairs(data, bin_size, title, ylabel):
         print(st.wilcoxon(data[0], data[1]))
 
     #plt.tight_layout()
+
+
+def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_response):
+
+    import numpy as np
+
+    w1_trial_counts = []
+
+    for frequency in freq_spikes_1:
+
+        freq_trial_counts = []
+
+        for unit in range(len(frequency)):
+
+            spike_times = frequency[unit]
+
+            unit_trial_count = []
+
+            for trial in range(len(spike_times)):
+
+                hist, bins = np.histogram(spike_times[trial], bins = 5000, range = (0,5))
+
+                unit_trial_count.append(hist)
+
+            freq_trial_counts.append(np.nanmean(unit_trial_count, 0))
+
+        w1_trial_counts.append(freq_trial_counts)
+
+
+
+    w2_trial_counts = []
+
+    for frequency in freq_spikes_2:
+
+        freq_trial_counts = []
+
+        for unit in range(len(frequency)):
+
+            spike_times = frequency[unit]
+
+            unit_trial_count = []
+
+            for trial in range(len(spike_times)):
+
+                hist, bins = np.histogram(spike_times[trial], bins = 5000, range = (0,5))
+
+                unit_trial_count.append(hist)
+
+            freq_trial_counts.append(np.nanmean(unit_trial_count, 0))
+
+        w2_trial_counts.append(freq_trial_counts)
+        
+    if w1_avg_response > w2_avg_response:
+        
+        pw_freq_counts = w1_trial_counts
+        aw_freq_counts = w2_trial_counts
+        
+    else:
+        
+        pw_freq_counts = w2_trial_counts
+        aw_freq_counts = w1_trial_counts
+            
+    return pw_freq_counts, aw_freq_counts
+        
