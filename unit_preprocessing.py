@@ -106,7 +106,7 @@ def load_freq_data(path, date):
     spikes_2_5 = loadmat(os.path.join(path, date, 'frequency/spikes_2_5'))
     spikes_2_5 = spikes_2_5['spikes_2_5']
                          
-    freq_spikes_2 = [spikes_1_1, spikes_1_2, spikes_1_3, spikes_1_4, spikes_1_5]
+    freq_spikes_2 = [spikes_2_1, spikes_2_2, spikes_2_3, spikes_2_4, spikes_2_5]
                          
     return freq_spikes_1, freq_spikes_2
 
