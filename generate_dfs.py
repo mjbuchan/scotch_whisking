@@ -92,7 +92,7 @@ def build_dfs(date):
 
     #perform frequency analysis
 
-    pw_freq_counts, aw_freq_counts = whisk.frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_response)
+    pw_freq_counts, aw_freq_counts, pw_freq_resps, aw_freq_resps = whisk.frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_response)
 
      ## calculate CSD profile from electrode depths
 
@@ -123,11 +123,9 @@ def build_dfs(date):
            'opto_resp_perc': opto_resp_perc, 'opto_bin_resp': opto_bin_responses, 'spont_resp': big_spont_responses,
            'stpr_1st': stpr_1st_half, 'stpr_2nd': stpr_2nd_half, 'entropy': unit_entropy, 'opto_latency': opto_latency,
            'pw_freq_4': pw_freq_counts[0], 'pw_freq_8': pw_freq_counts[1], 'pw_freq_12': pw_freq_counts[2], 'pw_freq_16': pw_freq_counts[3],'pw_freq_20': pw_freq_counts[4],
-           'aw_freq_4': aw_freq_counts[0], 'aw_freq_8': aw_freq_counts[1], 'aw_freq_12': aw_freq_counts[2], 'aw_freq_16': aw_freq_counts[3],'aw_freq_20': aw_freq_counts[4]
-           
-           
-        
-           }
+           'aw_freq_4': aw_freq_counts[0], 'aw_freq_8': aw_freq_counts[1], 'aw_freq_12': aw_freq_counts[2], 'aw_freq_16': aw_freq_counts[3],'aw_freq_20': aw_freq_counts[4],
+           'pw_freq_resp_4': pw_freq_resps[0], 'pw_freq_resp_8': pw_freq_resps[1], 'pw_freq_resp_12': pw_freq_resps[2], 'pw_freq_resp_16': pw_freq_resps[3], 'pw_freq_resp_20': pw_freq_resps[4],
+           'aw_freq_resp_4': aw_freq_resps[0], 'aw_freq_resp_8': aw_freq_resps[1], 'aw_freq_resp_12': aw_freq_resps[2], 'aw_freq_resp_16': aw_freq_resps[3], 'aw_freq_resp_20': aw_freq_resps[4]}
 
 
     import pandas as pd

@@ -461,59 +461,132 @@ def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_res
 
     w1_trial_counts = []
 
+    w1_freq_resps = []
+
+    stim = [4,8,12,16,20]
+
+    j = 0
+
     for frequency in freq_spikes_1:
-
+        
         freq_trial_counts = []
-
+        
+        freq_resps = []
+        
         for unit in range(len(frequency)):
-
+            
             spike_times = frequency[unit]
-
-            unit_trial_count = []
-
+            
+            unit_trial_counts = []
+            
+            unit_resps = []
+            
             for trial in range(len(spike_times)):
-
+                
                 hist, bins = np.histogram(spike_times[trial], bins = 5000, range = (0,5))
+                                        
+                unit_trial_counts.append(hist)                      
+        
+                stim_resp = []
+        
+                stims = stim[j]*3
+            
+                start = 1000
+        
+                for whisk in range(stims):
+        
+                    i = int(1000/stim[j])             
 
-                unit_trial_count.append(hist)
-
-            freq_trial_counts.append(np.nanmean(unit_trial_count, 0))
-
+                    resp = np.sum(hist[(start+(whisk*i)):(start+(whisk*i)+40)])
+        
+                    stim_resp.append(resp)
+            
+                unit_resps.append(stim_resp)
+                
+            freq_resps.append(np.nanmean(unit_resps,0))
+            
+            freq_trial_counts.append(np.nanmean(unit_trial_counts,0))
+            
+        j += 1
+            
+        w1_freq_resps.append(freq_resps)
+        
         w1_trial_counts.append(freq_trial_counts)
-
-
-
+        
+        
+        
+        
     w2_trial_counts = []
 
-    for frequency in freq_spikes_2:
+    w2_freq_resps = []
 
+    stim = [4,8,12,16,20]
+
+    j = 0
+
+    for frequency in freq_spikes_1:
+        
         freq_trial_counts = []
-
+        
+        freq_resps = []
+        
         for unit in range(len(frequency)):
-
+            
             spike_times = frequency[unit]
-
-            unit_trial_count = []
-
+            
+            unit_trial_counts = []
+            
+            unit_resps = []
+            
             for trial in range(len(spike_times)):
-
+                
                 hist, bins = np.histogram(spike_times[trial], bins = 5000, range = (0,5))
+                                        
+                unit_trial_counts.append(hist)                      
+        
+                stim_resp = []
+        
+                stims = stim[j]*3
+            
+                start = 1000
+        
+                for whisk in range(stims):
+        
+                    i = int(1000/stim[j])             
 
-                unit_trial_count.append(hist)
-
-            freq_trial_counts.append(np.nanmean(unit_trial_count, 0))
-
+                    resp = np.sum(hist[(start+(whisk*i)):(start+(whisk*i)+40)])
+        
+                    stim_resp.append(resp)
+            
+                unit_resps.append(stim_resp)
+                
+            freq_resps.append(np.nanmean(unit_resps,0))
+            
+            freq_trial_counts.append(np.nanmean(unit_trial_counts,0))
+            
+        j += 1
+            
+        w2_freq_resps.append(freq_resps)
+        
         w2_trial_counts.append(freq_trial_counts)
         
+
+
     if w1_avg_response > w2_avg_response:
-        
-        pw_freq_counts = w1_trial_counts
-        aw_freq_counts = w2_trial_counts
-        
-    else:
-        
-        pw_freq_counts = w2_trial_counts
-        aw_freq_counts = w1_trial_counts
             
-    return pw_freq_counts, aw_freq_counts
+            pw_freq_counts = w1_trial_counts
+            aw_freq_counts = w2_trial_counts
+            
+            pw_freq_resps = w1_freq_resps
+            aw_freq_resps = w2_freq_resps
+            
+    else:
+            
+            pw_freq_counts = w2_trial_counts
+            aw_freq_counts = w1_trial_counts
+            
+            pw_freq_resps = w2_freq_resps
+            aw_freq_resps = w1_freq_resps
+                
+    return pw_freq_counts, aw_freq_counts, pw_freq_resps, aw_freq_resps
         
