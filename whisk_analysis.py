@@ -484,6 +484,8 @@ def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_res
             for trial in range(len(spike_times)):
                 
                 hist, bins = np.histogram(spike_times[trial], bins = 5000, range = (0,5))
+
+                #if np.sum(spike_times[trial]) > 1 
                                         
                 unit_trial_counts.append(hist)                      
         
@@ -497,9 +499,13 @@ def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_res
         
                     i = int(1000/stim[j])             
 
-                    resp = np.sum(hist[(start+(whisk*i)):(start+(whisk*i)+40)])
+                    spont = np.sum(hist[50:90])       
+
+                    resp = np.sum(hist[(start+(whisk*i)):(start+(whisk*i)+40)]) - spont
         
                     stim_resp.append(resp)
+
+                stim_resp = [0 if i < 0 else i for i in stim_resp]
             
                 unit_resps.append(stim_resp)
                 
@@ -524,7 +530,7 @@ def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_res
 
     j = 0
 
-    for frequency in freq_spikes_1:
+    for frequency in freq_spikes_2:
         
         freq_trial_counts = []
         
@@ -552,11 +558,15 @@ def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_res
         
                 for whisk in range(stims):
         
-                    i = int(1000/stim[j])             
+                    i = int(1000/stim[j])      
 
-                    resp = np.sum(hist[(start+(whisk*i)):(start+(whisk*i)+40)])
-        
+                    spont = np.sum(hist[50:90])       
+
+                    resp = np.sum(hist[(start+(whisk*i)):(start+(whisk*i)+40)]) - spont
+
                     stim_resp.append(resp)
+
+                stim_resp = [0 if i < 0 else i for i in stim_resp]
             
                 unit_resps.append(stim_resp)
                 
