@@ -376,6 +376,7 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
     opto_trial_counts = []
     opto_resp_perc = []
     opto_latency = []
+    opto_spont = []
 
     for neuron in range(len(data)):
 
@@ -387,9 +388,15 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
 
         unit_latency = []
 
+        unit_spont = []
+
         for trial in range(len(data[neuron])):
 
             hist, bins = np.histogram(spike_times[trial], no_bins, range = (0,trial_length))
+
+            spont = sum(hist[0:500]/0.5)
+
+            unit_spont.append(spont)
 
             if sum(hist[1000:1000+resp_window]) > 0:
 
@@ -416,6 +423,8 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
         opto_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         opto_resp_perc.append(unit_response)
 
+        opto_spont.append(np.array(unit_spont))
+
         if np.array(unit_latency).sum() > 0: 
 
             opto_latency.append(min(unit_latency))
@@ -433,7 +442,7 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
     
     opto_tag = ((np.asarray(opto_resp_perc) >= 15) | (np.asarray(opto_bin_responses) >= 1))
 
-    return opto_trial_counts, opto_resp_perc, opto_tag, opto_bin_responses, opto_latency
+    return opto_trial_counts, opto_resp_perc, opto_tag, opto_bin_responses, opto_latency, opto_spont
 
 
 def split_units(opto_tag, rs_units, fs_units):

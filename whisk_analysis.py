@@ -388,8 +388,8 @@ def set_data_measure(df, opto_rs, non_opto_rs, measure, avg_type):
             
             else:
 
-                avg_opto.append(np.nanmean(df[measure][opto_date_mask]))
-                avg_non_opto.append(np.nanmean(df[measure][non_opto_date_mask]))
+                avg_opto.append(np.mean(df[measure][opto_date_mask]))
+                avg_non_opto.append(np.mean(df[measure][non_opto_date_mask]))
 
         else: 
             
@@ -463,6 +463,8 @@ def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_res
 
     w1_freq_resps = []
 
+    w1_freq_latency = []
+
     stim = [4,8,12,16,20]
 
     j = 0
@@ -472,6 +474,8 @@ def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_res
         freq_trial_counts = []
         
         freq_resps = []
+
+        freq_latency = []
         
         for unit in range(len(frequency)):
             
@@ -480,44 +484,68 @@ def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_res
             unit_trial_counts = []
             
             unit_resps = []
+
+            unit_latency = []
             
             for trial in range(len(spike_times)):
                 
                 hist, bins = np.histogram(spike_times[trial], bins = 5000, range = (0,5))
-
-                #if np.sum(spike_times[trial]) > 1 
                                         
                 unit_trial_counts.append(hist)                      
         
                 stim_resp = []
+
+                stim_latency = []
         
                 stims = stim[j]*3
             
                 start = 1000
-        
+                
                 for whisk in range(stims):
+                
+                    i = int(1000/stim[j])
+                
+                    window_open = start+(whisk*i)
+                    
+                    window_close = start+(whisk*i)+40
         
-                    i = int(1000/stim[j])             
+                    spont = sum(hist[50:90])       
 
-                    spont = np.sum(hist[50:90])       
+                    resp = sum(hist[window_open:window_close]) - spont
 
-                    resp = np.sum(hist[(start+(whisk*i)):(start+(whisk*i)+40)]) - spont
-        
+                    if np.argwhere((spike_times[trial] > (window_open/1000)) & (spike_times[trial] < (window_close/1000))).sum() > 0:
+
+                        latency = min(i for i in spike_times[trial] if i > window_open/1000)
+                        
+                        latency = latency-window_open/1000
+
+                    else:
+
+                        latency = float('NaN')
+
                     stim_resp.append(resp)
 
+                    stim_latency.append(latency)
+
                 stim_resp = [0 if i < 0 else i for i in stim_resp]
-            
-                unit_resps.append(stim_resp)
                 
+                unit_resps.append(stim_resp)
+
+                unit_latency.append(stim_latency)
+            
             freq_resps.append(np.nanmean(unit_resps,0))
             
             freq_trial_counts.append(np.nanmean(unit_trial_counts,0))
+
+            freq_latency.append(np.nanmean(unit_latency,0))
             
         j += 1
             
         w1_freq_resps.append(freq_resps)
         
         w1_trial_counts.append(freq_trial_counts)
+
+        w1_freq_latency.append(freq_latency)
         
         
         
@@ -525,6 +553,8 @@ def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_res
     w2_trial_counts = []
 
     w2_freq_resps = []
+
+    w2_freq_latency = []
 
     stim = [4,8,12,16,20]
 
@@ -535,6 +565,8 @@ def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_res
         freq_trial_counts = []
         
         freq_resps = []
+
+        freq_latency = []
         
         for unit in range(len(frequency)):
             
@@ -543,6 +575,8 @@ def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_res
             unit_trial_counts = []
             
             unit_resps = []
+
+            unit_latency = []
             
             for trial in range(len(spike_times)):
                 
@@ -551,34 +585,61 @@ def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_res
                 unit_trial_counts.append(hist)                      
         
                 stim_resp = []
+
+                stim_latency = []
         
                 stims = stim[j]*3
             
                 start = 1000
         
                 for whisk in range(stims):
+                
+                    i = int(1000/stim[j])
+                
+                    window_open = start+(whisk*i)
+                    
+                    window_close = start+(whisk*i)+40                  
         
-                    i = int(1000/stim[j])      
+                    spont = sum(hist[50:90])       
 
-                    spont = np.sum(hist[50:90])       
+                    resp = sum(hist[window_open:window_close]) - spont
 
-                    resp = np.sum(hist[(start+(whisk*i)):(start+(whisk*i)+40)]) - spont
+                    if np.argwhere((spike_times[trial] > (window_open/1000)) & (spike_times[trial] < (window_close/1000))).sum() > 0:
 
+                        latency = min(i for i in spike_times[trial] if i > window_open/1000)
+                        
+                        latency = latency-window_open/1000
+                        
+                    else:
+
+                        latency = float('NaN')
+                        
                     stim_resp.append(resp)
 
+                    stim_latency.append(latency)
+                    
+
                 stim_resp = [0 if i < 0 else i for i in stim_resp]
+                
+            
             
                 unit_resps.append(stim_resp)
+
+                unit_latency.append(stim_latency)
                 
             freq_resps.append(np.nanmean(unit_resps,0))
             
             freq_trial_counts.append(np.nanmean(unit_trial_counts,0))
+
+            freq_latency.append(np.nanmean(unit_latency,0))
             
         j += 1
             
         w2_freq_resps.append(freq_resps)
         
         w2_trial_counts.append(freq_trial_counts)
+
+        w2_freq_latency.append(freq_latency)
         
 
 
@@ -589,6 +650,9 @@ def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_res
             
             pw_freq_resps = w1_freq_resps
             aw_freq_resps = w2_freq_resps
+
+            pw_freq_latency = w1_freq_latency
+            aw_freq_latency = w2_freq_latency
             
     else:
             
@@ -597,6 +661,8 @@ def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_res
             
             pw_freq_resps = w2_freq_resps
             aw_freq_resps = w1_freq_resps
+
+            pw_freq_latency = w2_freq_latency
+            aw_freq_latency = w1_freq_latency
                 
-    return pw_freq_counts, aw_freq_counts, pw_freq_resps, aw_freq_resps
-        
+    return pw_freq_counts, aw_freq_counts, pw_freq_resps, aw_freq_resps, pw_freq_latency, aw_freq_latency
