@@ -388,8 +388,8 @@ def set_data_measure(df, opto_rs, non_opto_rs, measure, avg_type):
             
             else:
 
-                avg_opto.append(np.mean(df[measure][opto_date_mask]))
-                avg_non_opto.append(np.mean(df[measure][non_opto_date_mask]))
+                avg_opto.append(np.nanmean(df[measure][opto_date_mask]))
+                avg_non_opto.append(np.nanmean(df[measure][non_opto_date_mask]))
 
         else: 
             
