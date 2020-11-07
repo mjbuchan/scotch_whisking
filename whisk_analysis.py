@@ -138,6 +138,8 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
     if w1_avg_response > w2_avg_response:
 
+        print('PW = W1')
+
         pw_trial_counts = w1_trial_counts
         pw_resp_perc = w1_resp_perc
         pw_latency = w1_latency
@@ -151,6 +153,8 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
         pw_ID = 1
 
     if w1_avg_response < w2_avg_response:
+
+        print('PW = W2')
 
         pw_trial_counts = w2_trial_counts
         pw_resp_perc = w2_resp_perc
