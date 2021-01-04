@@ -182,13 +182,15 @@ def plot_unit_clusters(pop_t2p, pop_half_width, fs_units, rs_units):
     import seaborn as sns
     import matplotlib.pyplot as plt
 
-    plt.figure(figsize = (4,4))
+    plt.figure(figsize = (3,3))
 
     sns.kdeplot(pop_t2p[fs_units], pop_half_width[fs_units], cmap = 'Greys', shade = True, shade_lowest = False)
     sns.kdeplot(pop_t2p[rs_units], pop_half_width[rs_units], cmap = 'Blues', shade = True, shade_lowest = False)
 
     plt.xlim(0, 1.5)
     plt.ylim(0,1)
+
+    plt.yticks([0, 0.5, 1])
 
     plt.xlabel('Trough to peak (ms)')
     plt.ylabel('Half amplitude (ms)')
@@ -198,14 +200,14 @@ def plot_unit_clusters(pop_t2p, pop_half_width, fs_units, rs_units):
     red = sns.color_palette("Greys")[-2]
     blue = sns.color_palette("Blues")[-2]
     plt.text(0.025, 0.5, "Fast-spiking", size=12, color=red)
-    plt.text(0.125, 0.4, "n = 47", size=12, color=red)
+    plt.text(0.125, 0.4, "n = {}".format(fs_units.sum()), size=12, color=red)
     plt.text(0.6, 0.9, "Regular-spiking", size=12, color=blue)
-    plt.text(0.8, 0.8, "n = 186", size=12, color=blue)
+    plt.text(0.8, 0.8, "n = {}".format(rs_units.sum()), size=12, color=blue)
 
     print('fs units:', fs_units.sum())
     print('rs units:', rs_units.sum())
 
-    plt.tight_layout()
+    #plt.tight_layout()
 
 
 
@@ -279,55 +281,55 @@ def calculate_l4(csd, unit_depths, date, method):
         
         l4_bottom = 800-(sink_channels[-3]*25)
 
-        l4_top = 800-(sink_max*25)+75
-        l4_bottom = 800-(sink_max*25)-75
+        #l4_top = 800-(sink_max*25)+75
+        #l4_bottom = 800-(sink_max*25)-75
 
     if method == 'manual':
 
         if date == '2020_06_23_1':
 
-            l4_top = 800-(0*25)
-            l4_bottom = 800-(3*25)
+            l4_top = 800-(6*25)
+            l4_bottom = 800-(18*25)
 
         if date == '2020_06_23_2':
 
-            l4_top = 800-(9*25)
-            l4_bottom = 800-(15*25)
+            l4_top = 800-(8*25)
+            l4_bottom = 800-(16*25)
 
         if date == '2020_06_24_1':
 
-            l4_top = 800-(9*25)
-            l4_bottom = 800-(18*25)
+            l4_top = 800-(8*25)
+            l4_bottom = 800-(16*25)
 
         if date == '2020_06_24_2':
 
-            l4_top = 800-(9*25)
-            l4_bottom = 800-(18*25)
+            l4_top = 800-(8*25)
+            l4_bottom = 800-(16*25)
 
         if date == '2020_06_26':
 
-            l4_top = 800-(9*25)
+            l4_top = 800-(6*25)
             l4_bottom = 800-(18*25)
 
         if date == '2020_06_27':
 
-            l4_top = 800-(12*25)
-            l4_bottom = 800-(20*25)
+            l4_top = 800-(8*25)
+            l4_bottom = 800-(16*25)
 
         if date == '2020_06_28':
 
-            l4_top = 800-(0*25)
-            l4_bottom = 800-(12*25)
+            l4_top = 800-(6*25)
+            l4_bottom = 800-(18*25)
 
         if date == '2020_06_29':
 
-            l4_top = 800-(9*25)
-            l4_bottom = 800-(18*25)
+            l4_top = 800-(8*25)
+            l4_bottom = 800-(16*25)
 
     if method == 'spec':
 
-        l4_top = 500
-        l4_bottom = 350
+        l4_top = 600
+        l4_bottom = 400
 
     l23_bottom = l4_top
 
@@ -427,7 +429,7 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
 
         if np.array(unit_latency).sum() > 0: 
 
-            opto_latency.append(min(unit_latency))
+            opto_latency.append(np.mean(unit_latency,0))
 
         else: 
 

@@ -12,11 +12,11 @@ def build_dfs(date):
 
     # set paths
 
-    path = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_ON/data'
+    path = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/CAG_lhx2/data'
 
-    save = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_ON/processed_dfs'
+    save = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/CAG_lhx2/processed_dfs'
 
-    figsave = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_ON/figures'
+    figsave = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/CAG_lhx2/figures'
 
     # load data
 
@@ -25,7 +25,7 @@ def build_dfs(date):
     labels = up.generate_labels(unit_depths)
     dates = up.generate_dates(date, unit_depths)
 
-    freq_spikes_1, freq_spikes_2 = up.load_freq_data(path,date)
+    #freq_spikes_1, freq_spikes_2 = up.load_freq_data(path,date)
 
     # calculate waveform properties
 
@@ -37,23 +37,23 @@ def build_dfs(date):
 
     fs_units, rs_units = up.cluster_units(pop_t2p, pop_half_width)
 
-    #print('clustering complete')
+    print('clustering complete')
 
-    # plot kde of clusters with arbitrary .55 cut-off
+    #plot kde of clusters with arbitrary .55 cut-off
 
-    if fs_units.sum() > 1:
+   # if fs_units.sum() > 1:
 
-        up.plot_unit_clusters(pop_t2p, pop_half_width, fs_units, rs_units)
+   #     up.plot_unit_clusters(pop_t2p, pop_half_width, fs_units, rs_units)
         
-    else:
+   # else:
         
-        print('not enough fs units for plot')
+   #     print('not enough fs units for plot')
 
-    #print('fs units:', fs_units.sum())
-    #print('rs units:', rs_units.sum())
+    print('fs units:', fs_units.sum())
+    print('rs units:', rs_units.sum())
 
-    plt.savefig(os.path.join(figsave, date, 'clustered_units.svg'))
-    plt.savefig(os.path.join(figsave, date, 'clustered_units.png'))
+   # plt.savefig(os.path.join(figsave, date, 'clustered_units.svg'))
+   # plt.savefig(os.path.join(figsave, date, 'clustered_units.png'))
 
     # calculate entropy
 
@@ -75,12 +75,12 @@ def build_dfs(date):
 
     population_stpr, population_stlfp, unit_mua_coupling, unit_lfp_coupling, stpr_1st_half, stpr_2nd_half = spont.calculate_coupling(spont_spikes, spont_lfp, spont_mua_spikes, 'single_unit')
 
-    import matplotlib.pyplot as plt
+    # import matplotlib.pyplot as plt
 
-    [plt.plot(stpr) for stpr in population_stpr[rs_units]]
+    # [plt.plot(stpr) for stpr in population_stpr[rs_units]]
 
-    plt.savefig(os.path.join(figsave, date, 'rs_stpr.svg'))
-    plt.savefig(os.path.join(figsave, date, 'rs_stpr.png'))
+    # plt.savefig(os.path.join(figsave, date, 'rs_stpr.svg'))
+    # plt.savefig(os.path.join(figsave, date, 'rs_stpr.png'))
 
     #perform single whisk analysis
 
@@ -88,19 +88,19 @@ def build_dfs(date):
 
     # Perform quad whisk analysis
 
-    pw_ID, pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1  = whisk.dual_whisk_quad_analysis(quad_whisk_1, quad_whisk_2, w1_avg_response, w2_avg_response)
+    pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1  = whisk.dual_whisk_quad_analysis(quad_whisk_1, quad_whisk_2, w1_avg_response, w2_avg_response)
 
     #perform frequency analysis
 
-    pw_freq_counts, aw_freq_counts, pw_freq_resps, aw_freq_resps, pw_freq_latency, aw_freq_latency = whisk.frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_response)
+    #pw_freq_counts, aw_freq_counts, pw_freq_resps, aw_freq_resps, pw_freq_latency, aw_freq_latency = whisk.frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_response)
 
-     ## calculate CSD profile from electrode depths
+    ## calculate CSD profile from electrode depths
 
     csd = up.calculate_csd(lfp_1, lfp_2, 1, pw_ID)
 
     # plot CSD profile ## TO DO ## make plot nicer
 
-    up.plot_csd(csd, 100, date)
+    #up.plot_csd(csd, 100, date)
 
     # split units into layers 
 
@@ -108,8 +108,8 @@ def build_dfs(date):
 
     #print('layer split complete')
 
-    plt.savefig(os.path.join(figsave, date, 'csd.svg'))
-    plt.savefig(os.path.join(figsave, date, 'csd.png'))
+    # plt.savefig(os.path.join(figsave, date, 'csd.svg'))
+    # plt.savefig(os.path.join(figsave, date, 'csd.png'))
 
     #build dataframe
 
@@ -122,13 +122,13 @@ def build_dfs(date):
            'pw_4': pw_quad_4, 'aw_1': aw_quad_1, 'aw_2': aw_quad_2, 'aw_3': aw_quad_3,'aw_4': aw_quad_4,
            'opto_resp_perc': opto_resp_perc, 'opto_bin_resp': opto_bin_responses, 'spont_resp': big_spont_responses,
            'stpr_1st': stpr_1st_half, 'stpr_2nd': stpr_2nd_half, 'entropy': unit_entropy, 'opto_latency': opto_latency,
-           'pw_freq_4': pw_freq_counts[0], 'pw_freq_8': pw_freq_counts[1], 'pw_freq_12': pw_freq_counts[2], 'pw_freq_16': pw_freq_counts[3],'pw_freq_20': pw_freq_counts[4],
-           'aw_freq_4': aw_freq_counts[0], 'aw_freq_8': aw_freq_counts[1], 'aw_freq_12': aw_freq_counts[2], 'aw_freq_16': aw_freq_counts[3],'aw_freq_20': aw_freq_counts[4],
-           'pw_freq_resp_4': pw_freq_resps[0], 'pw_freq_resp_8': pw_freq_resps[1], 'pw_freq_resp_12': pw_freq_resps[2], 'pw_freq_resp_16': pw_freq_resps[3], 'pw_freq_resp_20': pw_freq_resps[4],
-           'aw_freq_resp_4': aw_freq_resps[0], 'aw_freq_resp_8': aw_freq_resps[1], 'aw_freq_resp_12': aw_freq_resps[2], 'aw_freq_resp_16': aw_freq_resps[3], 'aw_freq_resp_20': aw_freq_resps[4],
-           'pw_freq_latency_4': pw_freq_latency[0], 'pw_freq_latency_8': pw_freq_latency[1], 'pw_freq_latency_12': pw_freq_latency[2], 'pw_freq_latency_16': pw_freq_latency[3], 'pw_freq_latency_20': pw_freq_latency[4],
-           'aw_freq_latency_4': aw_freq_latency[0], 'aw_freq_latency_8': aw_freq_latency[1], 'aw_freq_latency_12': aw_freq_latency[2], 'aw_freq_latency_16': aw_freq_latency[3], 'aw_freq_latency_20': aw_freq_latency[4],
-           'opto_spont': opto_spont}
+        #    'pw_freq_4': pw_freq_counts[0], 'pw_freq_8': pw_freq_counts[1], 'pw_freq_12': pw_freq_counts[2], 'pw_freq_16': pw_freq_counts[3],'pw_freq_20': pw_freq_counts[4],
+        #    'aw_freq_4': aw_freq_counts[0], 'aw_freq_8': aw_freq_counts[1], 'aw_freq_12': aw_freq_counts[2], 'aw_freq_16': aw_freq_counts[3],'aw_freq_20': aw_freq_counts[4],
+        #    'pw_freq_resp_4': pw_freq_resps[0], 'pw_freq_resp_8': pw_freq_resps[1], 'pw_freq_resp_12': pw_freq_resps[2], 'pw_freq_resp_16': pw_freq_resps[3], 'pw_freq_resp_20': pw_freq_resps[4],
+        #    'aw_freq_resp_4': aw_freq_resps[0], 'aw_freq_resp_8': aw_freq_resps[1], 'aw_freq_resp_12': aw_freq_resps[2], 'aw_freq_resp_16': aw_freq_resps[3], 'aw_freq_resp_20': aw_freq_resps[4],
+        #    'pw_freq_latency_4': pw_freq_latency[0], 'pw_freq_latency_8': pw_freq_latency[1], 'pw_freq_latency_12': pw_freq_latency[2], 'pw_freq_latency_16': pw_freq_latency[3], 'pw_freq_latency_20': pw_freq_latency[4],
+        #    'aw_freq_latency_4': aw_freq_latency[0], 'aw_freq_latency_8': aw_freq_latency[1], 'aw_freq_latency_12': aw_freq_latency[2], 'aw_freq_latency_16': aw_freq_latency[3], 'aw_freq_latency_20': aw_freq_latency[4],
+           'opto_spont': opto_spont, 'pw_trial_counts':pw_trial_counts, 'aw_trial_counts': aw_trial_counts, 'pw_quad_trial_counts': pw_quad_trial_counts, 'aw_quad_trial_counts': aw_quad_trial_counts}
 
 
     import pandas as pd

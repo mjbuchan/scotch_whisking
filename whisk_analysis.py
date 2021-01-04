@@ -53,14 +53,14 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
             unit_latency.append(latency)
 
-        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.1) & (np.array(unit_latency) > 0.007)].tolist() 
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.005)].tolist() 
 
         w1_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w1_resp_perc.append(unit_response)
 
         if np.array(unit_latency).sum() > 0: 
 
-            w1_latency.append(min(unit_latency))
+            w1_latency.append(np.mean(unit_latency,0))
 
         else: 
 
@@ -105,38 +105,40 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
             unit_latency.append(latency)
 
-        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.1) & (np.array(unit_latency) > 0.007)].tolist()    
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.005)].tolist() 
 
         w2_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w2_resp_perc.append(unit_response)
         
         if np.array(unit_latency).sum() > 0: 
 
-            w2_latency.append(min(unit_latency))
+            w2_latency.append(np.mean(unit_latency,0))
 
         else: 
 
             w2_latency.append(float('Nan'))
 
-    w1_bin_responses = [np.sum(resp[1000:1050]) for resp in w1_trial_counts]
+    w1_bin_responses = [np.sum(resp[1000:1099]) for resp in w1_trial_counts]
     #w1_bin_responses = [np.sum(resp[100:105]) for resp in w1_trial_counts]
-    w1_spont_responses = [np.sum(resp[900:950]) for resp in w1_trial_counts]
+    w1_spont_responses = [np.sum(resp[800:899]) for resp in w1_trial_counts]
     #w1_spont_responses = [np.sum(resp[90:95]) for resp in w1_trial_counts]
 
-    big_spont_responses = [np.sum(resp[500:900]) for resp in w1_trial_counts]
+    big_spont_responses = [np.sum(resp[500:600]) for resp in w1_trial_counts]
     w1_bin_responses = (np.array(w1_bin_responses) - np.array(w1_spont_responses)).tolist()
 
     w1_avg_response = np.mean(w1_bin_responses)
 
-    w2_bin_responses = [np.sum(resp[1000:1050]) for resp in w2_trial_counts]
+    w2_bin_responses = [np.sum(resp[1000:1099]) for resp in w2_trial_counts]
     #w2_bin_responses = [np.sum(resp[100:105]) for resp in w2_trial_counts]
-    w2_spont_responses = [np.sum(resp[900:950]) for resp in w2_trial_counts]
+    w2_spont_responses = [np.sum(resp[800:899]) for resp in w2_trial_counts]
     #w2_spont_responses = [np.sum(resp[90:95]) for resp in w2_trial_counts]
     w2_bin_responses = (np.array(w2_bin_responses) - np.array(w2_spont_responses)).tolist()
 
     w2_avg_response = np.mean(w2_bin_responses)
 
-    if w1_avg_response > w2_avg_response:
+    #if w1_avg_response > w2_avg_response:
+
+    if np.nanmean(np.array(w1_latency)) < np.nanmean(np.array(w2_latency)):
 
         print('PW = W1')
 
@@ -152,7 +154,9 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
         pw_ID = 1
 
-    if w1_avg_response < w2_avg_response:
+    #if w1_avg_response < w2_avg_response:
+
+    if np.nanmean(np.array(w1_latency)) > np.nanmean(np.array(w2_latency)):
 
         print('PW = W2')
 
@@ -224,14 +228,14 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
 
             unit_latency.append(latency)
 
-        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.1) & (np.array(unit_latency) > 0.007)].tolist() 
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.005)].tolist() 
 
         w1_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w1_resp_perc.append(unit_response)
         
         if np.array(unit_latency).sum() > 0: 
 
-            w1_latency.append(min(unit_latency))
+            w1_latency.append(np.mean(unit_latency,0))
 
         else: 
 
@@ -273,26 +277,26 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
 
             unit_latency.append(latency)
 
-        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.1) & (np.array(unit_latency) > 0.007)].tolist() 
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.005)].tolist() 
 
         w2_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w2_resp_perc.append(unit_response)
         
         if np.array(unit_latency).sum() > 0: 
 
-            w2_latency.append(min(unit_latency))
+            w2_latency.append(np.mean(unit_latency,0))
 
         else: 
 
             w2_latency.append(float('Nan'))
             
 
-    w1_resp_1 = [np.sum(resp[1000:1050]) for resp in w1_trial_counts]
-    w1_resp_2 = [np.sum(resp[1100:1150]) for resp in w1_trial_counts]
-    w1_resp_3 = [np.sum(resp[1200:1250]) for resp in w1_trial_counts]
-    w1_resp_4 = [np.sum(resp[1300:1350]) for resp in w1_trial_counts]
+    w1_resp_1 = [np.sum(resp[1000:1025]) for resp in w1_trial_counts]
+    w1_resp_2 = [np.sum(resp[1100:1125]) for resp in w1_trial_counts]
+    w1_resp_3 = [np.sum(resp[1200:1225]) for resp in w1_trial_counts]
+    w1_resp_4 = [np.sum(resp[1300:1325]) for resp in w1_trial_counts]
     
-    w1_spont_responses = [np.sum(resp[900:950]) for resp in w1_trial_counts]
+    w1_spont_responses = [np.sum(resp[800:825]) for resp in w1_trial_counts]
     
     w1_resp_1 = np.array(w1_resp_1) - np.array(w1_spont_responses).tolist()
     w1_resp_2 = np.array(w1_resp_2) - np.array(w1_spont_responses).tolist()
@@ -304,12 +308,12 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
     w1_resp_3 = np.where(w1_resp_3<0, 0.001, w1_resp_3)
     w1_resp_4 = np.where(w1_resp_4<0, 0.001, w1_resp_4)
     
-    w2_resp_1 = [np.sum(resp[1000:1050]) for resp in w2_trial_counts]
-    w2_resp_2 = [np.sum(resp[1100:1150]) for resp in w2_trial_counts]
-    w2_resp_3 = [np.sum(resp[1200:1250]) for resp in w2_trial_counts]
-    w2_resp_4 = [np.sum(resp[1300:1350]) for resp in w2_trial_counts]
+    w2_resp_1 = [np.sum(resp[1000:1025]) for resp in w2_trial_counts]
+    w2_resp_2 = [np.sum(resp[1100:1125]) for resp in w2_trial_counts]
+    w2_resp_3 = [np.sum(resp[1200:1225]) for resp in w2_trial_counts]
+    w2_resp_4 = [np.sum(resp[1300:1325]) for resp in w2_trial_counts]
     
-    w2_spont_responses = [np.sum(resp[900:950]) for resp in w2_trial_counts]
+    w2_spont_responses = [np.sum(resp[800:825]) for resp in w2_trial_counts]
     
     w2_resp_1 = np.array(w2_resp_1) - np.array(w2_spont_responses).tolist()
     w2_resp_2 = np.array(w2_resp_2) - np.array(w2_spont_responses).tolist()
@@ -321,7 +325,7 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
     w2_resp_3 = np.where(w2_resp_3<0, 0.001, w2_resp_3)
     w2_resp_4 = np.where(w2_resp_4<0, 0.001, w2_resp_4)
 
-    if w1_avg_response > w2_avg_response:
+    if np.nanmean(np.array(w1_latency)) < np.nanmean(np.array(w2_latency)):
 
         pw_quad_1 = w1_resp_1
         pw_quad_2 = w1_resp_2
@@ -341,7 +345,7 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
 
         pw_ID = 1
 
-    if w1_avg_response < w2_avg_response:
+    if np.nanmean(np.array(w1_latency)) > np.nanmean(np.array(w2_latency)):
 
         pw_quad_1 = w2_resp_1
         pw_quad_2 = w2_resp_2
@@ -367,7 +371,7 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
     aw_ratio_2_1 = (aw_quad_2/aw_quad_1)*100
     aw_ratio_4_1 = (aw_quad_4/aw_quad_1)*100
 
-    return pw_ID, pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1 
+    return pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1 
 
 
 def set_data_measure(df, opto_rs, non_opto_rs, measure, avg_type):
@@ -397,7 +401,7 @@ def set_data_measure(df, opto_rs, non_opto_rs, measure, avg_type):
 
         else: 
             
-            print(dates, 'fail')
+            print(dates, opto_date_mask.sum(), non_opto_date_mask.sum(), 'fail')
 
     avg_opto = [x for x in avg_opto if str(x) != 'nan']
     avg_non_opto = [x for x in avg_non_opto if str(x) != 'nan']
@@ -416,10 +420,113 @@ def plot_unit_pairs(data, bin_size, title, ylabel):
 
     data = [np.array(data[0])/bin_size, np.array(data[1])/bin_size]
     
-    plt.figure(figsize = (1.5,4))
+    plt.figure(figsize = (2,3))
 
-    palette = ('limegreen', 'grey')
+    palette = ('limegreen', 'r')
     x_labels = ['aIP', 'OP']
+
+    ax = sns.stripplot(data = data, size = 7, linewidth = 2, jitter = 0, palette = palette, zorder = 0)
+
+    plt.hlines(np.mean(data[0]), -.1, .1)
+    plt.hlines(np.mean(data[1]), .9, 1.1)
+
+    plt.vlines(0, np.mean(data[0])-st.sem(data[0]),
+                    np.mean(data[0])+st.sem(data[0]))
+
+    plt.vlines(1, np.mean(data[1])-st.sem(data[1]),
+                    np.mean(data[1])+st.sem(data[1]))
+
+    for points in range(len(data[0])):
+
+        plt.plot((0, 1), (data[0][points], data[1][points]), color = 'grey', alpha = 0.1)
+
+    ax.set_xticklabels(x_labels)
+
+    plt.xlim(-.5, 1.5)
+    
+    plt.title(title)
+    plt.ylabel(ylabel)
+
+    norm_0 = st.shapiro(data[0])[1]
+    norm_1 = st.shapiro(data[1])[1]
+
+    if (norm_0 > 0.05) & (norm_1 > 0.05): 
+
+        print('data normal')
+        print(st.ttest_rel(data[0], data[1]))
+
+    else: 
+
+        print('data not normal')
+        print(st.wilcoxon(data[0], data[1]))
+
+    #plt.tight_layout()
+
+
+def plot_aIP_pairs(data, bin_size, title, ylabel):
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import scipy.stats as st
+    import seaborn as sns
+
+    data = [np.array(data[0])/bin_size, np.array(data[1])/bin_size]
+    
+    plt.figure(figsize = (2,3))
+
+    palette = ('limegreen', 'darkolivegreen')
+    x_labels = ['PW', 'AW']
+
+    ax = sns.stripplot(data = data, size = 7, linewidth = 2, jitter = 0, palette = palette, zorder = 0)
+
+    plt.hlines(np.mean(data[0]), -.1, .1)
+    plt.hlines(np.mean(data[1]), .9, 1.1)
+
+    plt.vlines(0, np.mean(data[0])-st.sem(data[0]),
+                    np.mean(data[0])+st.sem(data[0]))
+
+    plt.vlines(1, np.mean(data[1])-st.sem(data[1]),
+                    np.mean(data[1])+st.sem(data[1]))
+
+    for points in range(len(data[0])):
+
+        plt.plot((0, 1), (data[0][points], data[1][points]), color = 'grey', alpha = 0.1)
+
+    ax.set_xticklabels(x_labels)
+
+    plt.xlim(-.5, 1.5)
+    
+    plt.title(title)
+    plt.ylabel(ylabel)
+
+    norm_0 = st.shapiro(data[0])[1]
+    norm_1 = st.shapiro(data[1])[1]
+
+    if (norm_0 > 0.05) & (norm_1 > 0.05): 
+
+        print('data normal')
+        print(st.ttest_rel(data[0], data[1]))
+
+    else: 
+
+        print('data not normal')
+        print(st.wilcoxon(data[0], data[1]))
+
+    #plt.tight_layout()
+
+def plot_OP_pairs(data, bin_size, title, ylabel):
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import scipy.stats as st
+    import seaborn as sns
+
+    data = [np.array(data[0])/bin_size, np.array(data[1])/bin_size]
+    
+    plt.figure(figsize = (2,3))
+
+    palette = ('r', 'rosybrown')
+    x_labels = ['PW', 'AW']
 
     ax = sns.stripplot(data = data, size = 7, linewidth = 2, jitter = 0, palette = palette, zorder = 0)
 
