@@ -1,4 +1,4 @@
-def build_dfs(date):
+def build_dfs(date, data_type):
 
     import seaborn as sns
     import os
@@ -12,11 +12,21 @@ def build_dfs(date):
 
     # set paths
 
-    path = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/CAG_lhx2/data'
+    if data_type == 'ChR2_ON':
 
-    save = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/CAG_lhx2/processed_dfs'
+       path = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_ON/data'
 
-    figsave = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/CAG_lhx2/figures'
+       save = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_ON/processed_dfs'
+
+       figsave = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_ON/figures'
+
+    if data_type == 'CAG_lhx2':
+
+       path = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/CAG_lhx2/data'
+
+       save = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/CAG_lhx2/processed_dfs'
+
+       figsave = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/CAG_lhx2/figures'
 
     # load data
 
@@ -128,7 +138,7 @@ def build_dfs(date):
         #    'aw_freq_resp_4': aw_freq_resps[0], 'aw_freq_resp_8': aw_freq_resps[1], 'aw_freq_resp_12': aw_freq_resps[2], 'aw_freq_resp_16': aw_freq_resps[3], 'aw_freq_resp_20': aw_freq_resps[4],
         #    'pw_freq_latency_4': pw_freq_latency[0], 'pw_freq_latency_8': pw_freq_latency[1], 'pw_freq_latency_12': pw_freq_latency[2], 'pw_freq_latency_16': pw_freq_latency[3], 'pw_freq_latency_20': pw_freq_latency[4],
         #    'aw_freq_latency_4': aw_freq_latency[0], 'aw_freq_latency_8': aw_freq_latency[1], 'aw_freq_latency_12': aw_freq_latency[2], 'aw_freq_latency_16': aw_freq_latency[3], 'aw_freq_latency_20': aw_freq_latency[4],
-           'opto_spont': opto_spont, 'pw_trial_counts':pw_trial_counts, 'aw_trial_counts': aw_trial_counts, 'pw_quad_trial_counts': pw_quad_trial_counts, 'aw_quad_trial_counts': aw_quad_trial_counts}
+           'opto_spont': opto_spont, 'pw_trial_counts':pw_trial_counts, 'aw_trial_counts': aw_trial_counts, 'pw_quad_trial_counts': pw_quad_trial_counts, 'aw_quad_trial_counts': aw_quad_trial_counts, 'opto_trial_counts': opto_trial_counts}
 
 
     import pandas as pd

@@ -420,7 +420,9 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
 
             unit_latency.append(latency)
 
+   #     unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.002)].tolist() 
         unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.002)].tolist() 
+
 
         opto_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         opto_resp_perc.append(unit_response)
@@ -430,6 +432,7 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
         if np.array(unit_latency).sum() > 0: 
 
             opto_latency.append(np.mean(unit_latency,0))
+           # opto_latency.append(min(unit_latency))
 
         else: 
 
