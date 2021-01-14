@@ -1,6 +1,9 @@
 def pmf_from_counts(counts):
   """Given counts, normalize by the total to estimate probabilities.
   
+  add some more comments
+
+
   Neuromatch academy - altered by Matt Buchan // Akerman Lab - Aug 2020
   """
   import numpy as np
@@ -92,8 +95,6 @@ def calculate_unit_entropy(data):
         unit_entropy.append(entropy(pmf))
         
     return unit_entropy
-
-
 
 
 def calculate_coupling(spikes, lfp, mua, method):
