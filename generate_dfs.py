@@ -28,6 +28,14 @@ def build_dfs(date, data_type):
 
        figsave = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/CAG_lhx2/figures'
 
+    if data_type == 'ChR2_CAG':
+
+       path = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_CAG/data'
+
+       save = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_CAG/processed_dfs'
+
+       figsave = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_CAG/figures'
+
     # load data
 
     unit_waveforms, lfp_1, lfp_2, opto_tag_10, unit_depths, spont_spikes, spont_lfp, spont_mua_spikes, single_whisk_1, single_whisk_2, quad_whisk_1, quad_whisk_2 = up.load_data(date, path)
@@ -95,10 +103,14 @@ def build_dfs(date, data_type):
     #perform single whisk analysis
 
     pw_ID, pw_trial_counts, pw_resp_perc, pw_latency, pw_bin_responses, aw_trial_counts, aw_resp_perc, aw_latency, aw_bin_responses, w1_avg_response, w2_avg_response, big_spont_responses = whisk.dual_whisk_single_analysis(single_whisk_1, single_whisk_2)
+    
+    if date == "2020_06_24_1":
 
+       pw_ID = 1
+   
     # Perform quad whisk analysis
 
-    pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1  = whisk.dual_whisk_quad_analysis(quad_whisk_1, quad_whisk_2, w1_avg_response, w2_avg_response)
+    pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1  = whisk.dual_whisk_quad_analysis(pw_ID, quad_whisk_1, quad_whisk_2, w1_avg_response, w2_avg_response)
 
     #perform frequency analysis
 

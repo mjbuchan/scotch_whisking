@@ -380,7 +380,10 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
     opto_latency = []
     opto_spont = []
 
+    opto_lat_list = []
+
     for neuron in range(len(data)):
+
 
         spike_times = data[neuron]
 
@@ -421,8 +424,9 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
             unit_latency.append(latency)
 
    #     unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.002)].tolist() 
-        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.002)].tolist() 
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.1) & (np.array(unit_latency) > 0.002)].tolist() 
 
+        opto_lat_list.append(unit_latency)
 
         opto_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         opto_resp_perc.append(unit_response)
@@ -431,7 +435,7 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
 
         if np.array(unit_latency).sum() > 0: 
 
-            opto_latency.append(np.mean(unit_latency,0))
+            opto_latency.append(np.median(unit_latency,0))
            # opto_latency.append(min(unit_latency))
 
         else: 

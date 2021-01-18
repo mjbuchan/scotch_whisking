@@ -136,9 +136,9 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
     w2_avg_response = np.mean(w2_bin_responses)
 
-    #if w1_avg_response > w2_avg_response:
+    if w1_avg_response > w2_avg_response:
 
-    if np.nanmean(np.array(w1_latency)) < np.nanmean(np.array(w2_latency)):
+    #if np.nanmean(np.array(w1_latency)) < np.nanmean(np.array(w2_latency)):
 
         print('PW = W1')
 
@@ -154,9 +154,9 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
         pw_ID = 1
 
-    #if w1_avg_response < w2_avg_response:
+    if w1_avg_response < w2_avg_response:
 
-    if np.nanmean(np.array(w1_latency)) > np.nanmean(np.array(w2_latency)):
+    #if np.nanmean(np.array(w1_latency)) > np.nanmean(np.array(w2_latency)):
 
         print('PW = W2')
 
@@ -175,7 +175,7 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
     return pw_ID, pw_trial_counts, pw_resp_perc, pw_latency, pw_bin_responses, aw_trial_counts, aw_resp_perc, aw_latency, aw_bin_responses, w1_avg_response, w2_avg_response, big_spont_responses
 
 
-def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response):
+def dual_whisk_quad_analysis(pw_ID, whisk_1, whisk_2, w1_avg_response, w2_avg_response):
 
     ''' Hella script to spit out quad whisk details - 
         importantly works out which whisker is which
@@ -325,7 +325,11 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
     w2_resp_3 = np.where(w2_resp_3<0, 0.001, w2_resp_3)
     w2_resp_4 = np.where(w2_resp_4<0, 0.001, w2_resp_4)
 
-    if np.nanmean(np.array(w1_latency)) < np.nanmean(np.array(w2_latency)):
+    #if w1_avg_response > w2_avg_response:
+
+    #if np.nanmean(np.array(w1_latency)) < np.nanmean(np.array(w2_latency)):
+
+    if pw_ID == 1:
 
         pw_quad_1 = w1_resp_1
         pw_quad_2 = w1_resp_2
@@ -343,9 +347,13 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
         pw_1_latency = w1_latency
         aw_1_latency = w2_latency
 
-        pw_ID = 1
+    #    pw_ID = 1
 
-    if np.nanmean(np.array(w1_latency)) > np.nanmean(np.array(w2_latency)):
+   # if w1_avg_response < w2_avg_response:
+
+    #if np.nanmean(np.array(w1_latency)) > np.nanmean(np.array(w2_latency)):
+
+    if pw_ID == 2:
 
         pw_quad_1 = w2_resp_1
         pw_quad_2 = w2_resp_2
@@ -363,7 +371,7 @@ def dual_whisk_quad_analysis(whisk_1, whisk_2, w1_avg_response, w2_avg_response)
         pw_1_latency = w2_latency
         aw_1_latency = w1_latency
 
-        pw_ID = 2
+     #   pw_ID = 2
     
     pw_ratio_2_1 = (pw_quad_2/pw_quad_1)*100
     pw_ratio_4_1 = (pw_quad_4/pw_quad_1)*100
