@@ -480,12 +480,12 @@ def plot_aIP_pairs(data, bin_size, title, ylabel):
 
     data = [np.array(data[0])/bin_size, np.array(data[1])/bin_size]
     
-    plt.figure(figsize = (2,3))
+    plt.figure(figsize = (1.5,3))
 
     palette = ('limegreen', 'darkolivegreen')
     x_labels = ['PW', 'AW']
 
-    ax = sns.stripplot(data = data, size = 7, linewidth = 2, jitter = 0, palette = palette, zorder = 0)
+    ax = sns.stripplot(data = data, size = 6, linewidth = 0, jitter = 0, palette = palette, zorder = 0)
 
     plt.hlines(np.mean(data[0]), -.1, .1)
     plt.hlines(np.mean(data[1]), .9, 1.1)
@@ -519,6 +519,9 @@ def plot_aIP_pairs(data, bin_size, title, ylabel):
 
         print('data not normal')
         print(st.wilcoxon(data[0], data[1]))
+
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
 
     #plt.tight_layout()
 
@@ -531,12 +534,12 @@ def plot_OP_pairs(data, bin_size, title, ylabel):
 
     data = [np.array(data[0])/bin_size, np.array(data[1])/bin_size]
     
-    plt.figure(figsize = (2,3))
+    plt.figure(figsize = (1.5,3))
 
     palette = ('r', 'rosybrown')
     x_labels = ['PW', 'AW']
 
-    ax = sns.stripplot(data = data, size = 7, linewidth = 2, jitter = 0, palette = palette, zorder = 0)
+    ax = sns.stripplot(data = data, size = 6, linewidth = 0, jitter = 0, palette = palette, zorder = 0)
 
     plt.hlines(np.mean(data[0]), -.1, .1)
     plt.hlines(np.mean(data[1]), .9, 1.1)
@@ -571,8 +574,219 @@ def plot_OP_pairs(data, bin_size, title, ylabel):
         print('data not normal')
         print(st.wilcoxon(data[0], data[1]))
 
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+
+
     #plt.tight_layout()
 
+def plot_versus_pairs(data, bin_size, title, ylabel):
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import scipy.stats as st
+    import seaborn as sns
+
+    data = [np.array(data[0])/bin_size, np.array(data[1])/bin_size]
+    
+    plt.figure(figsize = (1.5,3))
+
+    palette = ('limegreen', 'r')
+    x_labels = ['aIP', 'OP']
+
+    ax = sns.stripplot(data = data, size = 6, linewidth = 0, jitter = 0, palette = palette, zorder = 0)
+
+    plt.hlines(np.mean(data[0]), -.1, .1)
+    plt.hlines(np.mean(data[1]), .9, 1.1)
+
+    plt.vlines(0, np.mean(data[0])-st.sem(data[0]),
+                    np.mean(data[0])+st.sem(data[0]))
+
+    plt.vlines(1, np.mean(data[1])-st.sem(data[1]),
+                    np.mean(data[1])+st.sem(data[1]))
+
+
+    ax.set_xticklabels(x_labels)
+
+    plt.xlim(-.5, 1.5)
+    
+    plt.title(title)
+    plt.ylabel(ylabel)
+
+    norm_0 = st.shapiro(data[0])[1]
+    norm_1 = st.shapiro(data[1])[1]
+
+    if (norm_0 > 0.05) & (norm_1 > 0.05): 
+
+        print('data normal')
+        print(st.ttest_ind(data[0], data[1]))
+
+    else: 
+
+        print('data not normal')
+        print(st.wilcoxon(data[0], data[1]))
+
+    #plt.tight_layout()
+
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+
+def plot_chr2neg_pairs(data, bin_size, title, ylabel):
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import scipy.stats as st
+    import seaborn as sns
+
+    data = [np.array(data[0])/bin_size, np.array(data[1])/bin_size]
+    
+    plt.figure(figsize = (1.5,3))
+
+    palette = ('grey', 'lightgrey')
+    x_labels = ['PW', 'AW']
+
+    ax = sns.stripplot(data = data, size = 6, linewidth = 0, jitter = 0, palette = palette, zorder = 0)
+
+    plt.hlines(np.mean(data[0]), -.1, .1)
+    plt.hlines(np.mean(data[1]), .9, 1.1)
+
+    plt.vlines(0, np.mean(data[0])-st.sem(data[0]),
+                    np.mean(data[0])+st.sem(data[0]))
+
+    plt.vlines(1, np.mean(data[1])-st.sem(data[1]),
+                    np.mean(data[1])+st.sem(data[1]))
+
+    for points in range(len(data[0])):
+
+        plt.plot((0, 1), (data[0][points], data[1][points]), color = 'grey', alpha = 0.1)
+
+    ax.set_xticklabels(x_labels)
+
+    plt.xlim(-.5, 1.5)
+    
+    plt.title(title)
+    plt.ylabel(ylabel)
+
+    norm_0 = st.shapiro(data[0])[1]
+    norm_1 = st.shapiro(data[1])[1]
+
+    if (norm_0 > 0.05) & (norm_1 > 0.05): 
+
+        print('data normal')
+        print(st.ttest_ind(data[0], data[1]))
+
+    else: 
+
+        print('data not normal')
+        print(st.wilcoxon(data[0], data[1]))
+
+    #plt.tight_layout()
+
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+
+def plot_chr2pos_pairs(data, bin_size, title, ylabel):
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import scipy.stats as st
+    import seaborn as sns
+
+    data = [np.array(data[0])/bin_size, np.array(data[1])/bin_size]
+    
+    plt.figure(figsize = (1.5,3))
+
+    palette = ('dodgerblue', 'lightsteelblue')
+    x_labels = ['PW', 'AW']
+
+    ax = sns.stripplot(data = data, size = 6, linewidth = 0, jitter = 0, palette = palette, zorder = 0)
+
+    plt.hlines(np.mean(data[0]), -.1, .1)
+    plt.hlines(np.mean(data[1]), .9, 1.1)
+
+    plt.vlines(0, np.mean(data[0])-st.sem(data[0]),
+                    np.mean(data[0])+st.sem(data[0]))
+
+    plt.vlines(1, np.mean(data[1])-st.sem(data[1]),
+                    np.mean(data[1])+st.sem(data[1]))
+
+    for points in range(len(data[0])):
+
+        plt.plot((0, 1), (data[0][points], data[1][points]), color = 'grey', alpha = 0.1)
+
+    ax.set_xticklabels(x_labels)
+
+    plt.xlim(-.5, 1.5)
+    
+    plt.title(title)
+    plt.ylabel(ylabel)
+
+    norm_0 = st.shapiro(data[0])[1]
+    norm_1 = st.shapiro(data[1])[1]
+
+    if (norm_0 > 0.05) & (norm_1 > 0.05): 
+
+        print('data normal')
+        print(st.ttest_ind(data[0], data[1]))
+
+    else: 
+
+        print('data not normal')
+        print(st.wilcoxon(data[0], data[1]))
+
+    #plt.tight_layout()
+
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+
+def plot_cag_pairs(data, bin_size, title, ylabel):
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import scipy.stats as st
+    import seaborn as sns
+
+    data = [np.array(data[0])/bin_size, np.array(data[1])/bin_size]
+    
+    plt.figure(figsize = (1.5,3))
+
+    palette = ('dodgerblue', 'grey')
+    x_labels = ['ChR2+', 'ChR2-']
+
+    ax = sns.stripplot(data = data, size = 6, linewidth = 0, jitter = 0, palette = palette, zorder = 0)
+
+    plt.hlines(np.mean(data[0]), -.1, .1)
+    plt.hlines(np.mean(data[1]), .9, 1.1)
+
+    plt.vlines(0, np.mean(data[0])-st.sem(data[0]),
+                    np.mean(data[0])+st.sem(data[0]))
+
+    plt.vlines(1, np.mean(data[1])-st.sem(data[1]),
+                    np.mean(data[1])+st.sem(data[1]))
+
+
+    ax.set_xticklabels(x_labels)
+
+    plt.xlim(-.5, 1.5)
+    
+    plt.title(title)
+    plt.ylabel(ylabel)
+
+    norm_0 = st.shapiro(data[0])[1]
+    norm_1 = st.shapiro(data[1])[1]
+
+    if (norm_0 > 0.05) & (norm_1 > 0.05): 
+
+        print('data normal')
+        print(st.ttest_ind(data[0], data[1]))
+
+    else: 
+
+        print('data not normal')
+        print(st.ranksums(data[0], data[1]))
+
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
 
 def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_response):
 
