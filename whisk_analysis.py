@@ -631,6 +631,57 @@ def plot_versus_pairs(data, bin_size, title, ylabel):
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
 
+def plot_versus_unmatched_pairs(data, bin_size, title, ylabel):
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import scipy.stats as st
+    import seaborn as sns
+
+    data = [np.array(data[0])/bin_size, np.array(data[1])/bin_size]
+    
+    plt.figure(figsize = (1.5,3))
+
+    palette = ('limegreen', 'r')
+    x_labels = ['aIP', 'OP']
+
+    ax = sns.stripplot(data = data, size = 6, linewidth = 0, jitter = 0, palette = palette, zorder = 0)
+
+    plt.hlines(np.mean(data[0]), -.1, .1)
+    plt.hlines(np.mean(data[1]), .9, 1.1)
+
+    plt.vlines(0, np.mean(data[0])-st.sem(data[0]),
+                    np.mean(data[0])+st.sem(data[0]))
+
+    plt.vlines(1, np.mean(data[1])-st.sem(data[1]),
+                    np.mean(data[1])+st.sem(data[1]))
+
+
+    ax.set_xticklabels(x_labels)
+
+    plt.xlim(-.5, 1.5)
+    
+    plt.title(title)
+    plt.ylabel(ylabel)
+
+    norm_0 = st.shapiro(data[0])[1]
+    norm_1 = st.shapiro(data[1])[1]
+
+    if (norm_0 > 0.05) & (norm_1 > 0.05): 
+
+        print('data normal')
+        print(st.ttest_ind(data[0], data[1]))
+
+    else: 
+
+        print('data not normal')
+        print(st.ranksums(data[0], data[1]))
+
+    #plt.tight_layout()
+
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+
 def plot_chr2neg_pairs(data, bin_size, title, ylabel):
 
     import numpy as np
