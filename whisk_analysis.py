@@ -60,7 +60,7 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
         if np.array(unit_latency).sum() > 0: 
 
-            w1_latency.append(np.mean(unit_latency,0))
+            w1_latency.append(min(unit_latency))
 
         else: 
 
@@ -112,7 +112,7 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
         
         if np.array(unit_latency).sum() > 0: 
 
-            w2_latency.append(np.mean(unit_latency,0))
+            w2_latency.append(min(unit_latency))
 
         else: 
 
@@ -235,7 +235,7 @@ def dual_whisk_quad_analysis(pw_ID, whisk_1, whisk_2, w1_avg_response, w2_avg_re
         
         if np.array(unit_latency).sum() > 0: 
 
-            w1_latency.append(np.mean(unit_latency,0))
+            w1_latency.append(min(unit_latency))
 
         else: 
 
@@ -284,7 +284,7 @@ def dual_whisk_quad_analysis(pw_ID, whisk_1, whisk_2, w1_avg_response, w2_avg_re
         
         if np.array(unit_latency).sum() > 0: 
 
-            w2_latency.append(np.mean(unit_latency,0))
+            w2_latency.append(min(unit_latency))
 
         else: 
 
