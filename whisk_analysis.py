@@ -1050,3 +1050,390 @@ def frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_res
             aw_freq_latency = w1_freq_latency
                 
     return pw_freq_counts, aw_freq_counts, pw_freq_resps, aw_freq_resps, pw_freq_latency, aw_freq_latency
+
+
+
+
+
+def dual_whisk_single_analysis_10ms(whisk_1, whisk_2):
+
+    ''' Hella script to spit out single whisk details - 
+        importantly works out which whisker is which
+
+        Inputs just whisk_1 and whisk_2 = neurons x trials x spike times arrays
+
+        Outputs everything...
+
+
+        Matt Buchan // Akerman Lab - Sept 2020
+    '''
+
+    import numpy as np 
+
+    w1_trial_counts = []
+    w1_resp_perc = []
+    w1_latency = []
+
+    for neuron in range(len(whisk_1)):
+
+        spike_times = whisk_1[neuron]
+
+        unit_trial_count = []
+
+        unit_response = 0
+
+        unit_latency = []
+
+        for trial in range(len(whisk_1[neuron])):
+
+            hist, bins = np.histogram(spike_times[trial], 300, range = (0,3))
+            #hist, bins = np.histogram(spike_times[trial], 3000, range = (0,3))
+
+            #if sum(hist[100:105]) > 0:
+            if sum(hist[1000:1050]) > 0:
+
+                unit_response += 1
+
+            unit_trial_count.append(hist)
+
+            #if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.099)).sum() > 0:
+            if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.01)).sum() > 0:
+
+
+                latency = min(i for i in spike_times[trial] if i > 1)
+
+                latency = latency - 1
+
+            else: 
+
+                latency = float('NaN')
+
+            unit_latency.append(latency)
+
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.005)].tolist() 
+
+        w1_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
+        w1_resp_perc.append(unit_response)
+
+        if np.array(unit_latency).sum() > 0: 
+
+            w1_latency.append(min(unit_latency))
+
+        else: 
+
+            w1_latency.append(float('Nan'))
+
+    w2_trial_counts = []
+    w2_resp_perc = []
+    w2_latency = []
+
+    for neuron in range(len(whisk_2)):
+
+        spike_times = whisk_2[neuron]
+
+        unit_trial_count = []
+
+        unit_response = 0
+
+        unit_latency = []
+
+        for trial in range(len(whisk_2[neuron])):
+
+            hist, bins = np.histogram(spike_times[trial], 300, range = (0,3))
+            #hist, bins = np.histogram(spike_times[trial], 3000, range = (0,3))
+
+            #if sum(hist[100:105]) > 0:
+            if sum(hist[1000:1050]) > 0:
+
+                unit_response += 1
+
+            unit_trial_count.append(hist)
+
+            #if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.099)).sum() > 0:
+            if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.01)).sum() > 0:
+
+                latency = min(i for i in spike_times[trial] if i > 1)
+
+                latency = latency - 1
+
+            else: 
+
+                latency = float('NaN')
+
+            unit_latency.append(latency)
+
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.005)].tolist() 
+
+        w2_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
+        w2_resp_perc.append(unit_response)
+        
+        if np.array(unit_latency).sum() > 0: 
+
+            w2_latency.append(min(unit_latency))
+
+        else: 
+
+            w2_latency.append(float('Nan'))
+
+    #w1_bin_responses = [np.sum(resp[1000:1099]) for resp in w1_trial_counts]
+    w1_bin_responses = [np.sum(resp[100:105]) for resp in w1_trial_counts]
+    #w1_spont_responses = [np.sum(resp[800:899]) for resp in w1_trial_counts]
+    w1_spont_responses = [np.sum(resp[90:95]) for resp in w1_trial_counts]
+
+    big_spont_responses = [np.sum(resp[500:600]) for resp in w1_trial_counts]
+    w1_bin_responses = (np.array(w1_bin_responses) - np.array(w1_spont_responses)).tolist()
+
+    w1_avg_response = np.mean(w1_bin_responses)
+
+    #w2_bin_responses = [np.sum(resp[1000:1099]) for resp in w2_trial_counts]
+    w2_bin_responses = [np.sum(resp[100:105]) for resp in w2_trial_counts]
+    #w2_spont_responses = [np.sum(resp[800:899]) for resp in w2_trial_counts]
+    w2_spont_responses = [np.sum(resp[90:95]) for resp in w2_trial_counts]
+    w2_bin_responses = (np.array(w2_bin_responses) - np.array(w2_spont_responses)).tolist()
+
+    w2_avg_response = np.mean(w2_bin_responses)
+
+    if w1_avg_response > w2_avg_response:
+
+    #if np.nanmean(np.array(w1_latency)) < np.nanmean(np.array(w2_latency)):
+
+        print('PW = W1')
+
+        pw_trial_counts = w1_trial_counts
+        pw_resp_perc = w1_resp_perc
+        pw_latency = w1_latency
+        pw_bin_responses = w1_bin_responses
+
+        aw_trial_counts = w2_trial_counts
+        aw_resp_perc = w2_resp_perc
+        aw_latency = w2_latency
+        aw_bin_responses = w2_bin_responses
+
+        pw_ID = 1
+
+    if w1_avg_response < w2_avg_response:
+
+    #if np.nanmean(np.array(w1_latency)) > np.nanmean(np.array(w2_latency)):
+
+        print('PW = W2')
+
+        pw_trial_counts = w2_trial_counts
+        pw_resp_perc = w2_resp_perc
+        pw_latency = w2_latency
+        pw_bin_responses = w2_bin_responses
+
+        aw_trial_counts = w1_trial_counts
+        aw_resp_perc = w1_resp_perc
+        aw_latency = w1_latency
+        aw_bin_responses = w1_bin_responses
+
+        pw_ID = 2
+
+    return pw_ID, pw_trial_counts, pw_resp_perc, pw_latency, pw_bin_responses, aw_trial_counts, aw_resp_perc, aw_latency, aw_bin_responses, w1_avg_response, w2_avg_response, big_spont_responses
+
+
+def dual_whisk_quad_analysis_10ms(pw_ID, whisk_1, whisk_2, w1_avg_response, w2_avg_response):
+
+    ''' Hella script to spit out quad whisk details - 
+        importantly works out which whisker is which
+
+        Inputs just quad_whisk_1 and quad_whisk_2 = neurons x trials x spike times arrays
+        plus you also need the avg responses from the single analysis to be consistent on pw/aw
+        
+        
+        Outputs everything...
+
+
+        Matt Buchan // Akerman Lab - Sept 2020
+    '''
+
+    import numpy as np 
+
+    w1_trial_counts = []
+    w1_resp_perc = []
+    w1_latency = []
+
+    for neuron in range(len(whisk_1)):
+
+        spike_times = whisk_1[neuron]
+
+        unit_trial_count = []
+
+        unit_response = 0
+
+        unit_latency = []
+
+        for trial in range(len(whisk_1[neuron])):
+
+            hist, bins = np.histogram(spike_times[trial], 300, range = (0,3))
+
+            if sum(hist[1000:1050]) > 0:
+
+                unit_response += 1
+
+            unit_trial_count.append(hist)
+
+            if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.01)).sum() > 0:
+
+                latency = min(i for i in spike_times[trial] if i > 1)
+
+                latency = latency - 1
+
+            else: 
+
+                latency = float('NaN')
+
+            unit_latency.append(latency)
+
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.005)].tolist() 
+
+        w1_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
+        w1_resp_perc.append(unit_response)
+        
+        if np.array(unit_latency).sum() > 0: 
+
+            w1_latency.append(min(unit_latency))
+
+        else: 
+
+            w1_latency.append(float('Nan'))
+
+    w2_trial_counts = []
+    w2_resp_perc = []
+    w2_latency = []
+
+    for neuron in range(len(whisk_2)):
+
+        spike_times = whisk_2[neuron]
+
+        unit_trial_count = []
+
+        unit_response = 0
+
+        unit_latency = []
+
+        for trial in range(len(whisk_2[neuron])):
+
+            hist, bins = np.histogram(spike_times[trial], 300, range = (0,3))
+
+            if sum(hist[1000:1050]) > 0:
+
+                unit_response += 1
+
+            unit_trial_count.append(hist)
+
+            if np.argwhere((spike_times[trial] > 1) & (spike_times[trial] < 1.01)).sum() > 0:
+
+                latency = min(i for i in spike_times[trial] if i > 1)
+
+                latency = latency - 1
+
+            else: 
+
+                latency = float('NaN')
+
+            unit_latency.append(latency)
+
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.005)].tolist() 
+
+        w2_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
+        w2_resp_perc.append(unit_response)
+        
+        if np.array(unit_latency).sum() > 0: 
+
+            w2_latency.append(min(unit_latency))
+
+        else: 
+
+            w2_latency.append(float('Nan'))
+            
+
+    w1_resp_1 = [np.sum(resp[100:1030]) for resp in w1_trial_counts]
+    w1_resp_2 = [np.sum(resp[110:1130]) for resp in w1_trial_counts]
+    w1_resp_3 = [np.sum(resp[120:1230]) for resp in w1_trial_counts]
+    w1_resp_4 = [np.sum(resp[130:1330]) for resp in w1_trial_counts]
+    
+    w1_spont_responses = [np.sum(resp[800:830]) for resp in w1_trial_counts]
+    
+    w1_resp_1 = np.array(w1_resp_1) - np.array(w1_spont_responses).tolist()
+    w1_resp_2 = np.array(w1_resp_2) - np.array(w1_spont_responses).tolist()
+    w1_resp_3 = np.array(w1_resp_3) - np.array(w1_spont_responses).tolist()
+    w1_resp_4 = np.array(w1_resp_4) - np.array(w1_spont_responses).tolist()
+    
+    w1_resp_1 = np.where(w1_resp_1<0, 0.001, w1_resp_1)
+    w1_resp_2 = np.where(w1_resp_2<0, 0.001, w1_resp_2)
+    w1_resp_3 = np.where(w1_resp_3<0, 0.001, w1_resp_3)
+    w1_resp_4 = np.where(w1_resp_4<0, 0.001, w1_resp_4)
+    
+    w2_resp_1 = [np.sum(resp[100:1030]) for resp in w2_trial_counts]
+    w2_resp_2 = [np.sum(resp[110:1130]) for resp in w2_trial_counts]
+    w2_resp_3 = [np.sum(resp[120:1230]) for resp in w2_trial_counts]
+    w2_resp_4 = [np.sum(resp[130:1330]) for resp in w2_trial_counts]
+    
+    w2_spont_responses = [np.sum(resp[800:830]) for resp in w2_trial_counts]
+    
+    w2_resp_1 = np.array(w2_resp_1) - np.array(w2_spont_responses).tolist()
+    w2_resp_2 = np.array(w2_resp_2) - np.array(w2_spont_responses).tolist()
+    w2_resp_3 = np.array(w2_resp_3) - np.array(w2_spont_responses).tolist()
+    w2_resp_4 = np.array(w2_resp_4) - np.array(w2_spont_responses).tolist()
+    
+    w2_resp_1 = np.where(w2_resp_1<0, 0.001, w2_resp_1)
+    w2_resp_2 = np.where(w2_resp_2<0, 0.001, w2_resp_2)
+    w2_resp_3 = np.where(w2_resp_3<0, 0.001, w2_resp_3)
+    w2_resp_4 = np.where(w2_resp_4<0, 0.001, w2_resp_4)
+
+    #if w1_avg_response > w2_avg_response:
+
+    #if np.nanmean(np.array(w1_latency)) < np.nanmean(np.array(w2_latency)):
+
+    if pw_ID == 1:
+
+        pw_quad_1 = w1_resp_1
+        pw_quad_2 = w1_resp_2
+        pw_quad_3 = w1_resp_3
+        pw_quad_4 = w1_resp_4
+        
+        aw_quad_1 = w2_resp_1
+        aw_quad_2 = w2_resp_2
+        aw_quad_3 = w2_resp_3
+        aw_quad_4 = w2_resp_4
+        
+        pw_quad_trial_counts = w1_trial_counts
+        aw_quad_trial_counts = w2_trial_counts
+
+        pw_1_latency = w1_latency
+        aw_1_latency = w2_latency
+
+    #    pw_ID = 1
+
+   # if w1_avg_response < w2_avg_response:
+
+    #if np.nanmean(np.array(w1_latency)) > np.nanmean(np.array(w2_latency)):
+
+    if pw_ID == 2:
+
+        pw_quad_1 = w2_resp_1
+        pw_quad_2 = w2_resp_2
+        pw_quad_3 = w2_resp_3
+        pw_quad_4 = w2_resp_4
+        
+        aw_quad_1 = w1_resp_1
+        aw_quad_2 = w1_resp_2
+        aw_quad_3 = w1_resp_3
+        aw_quad_4 = w1_resp_4
+        
+        pw_quad_trial_counts = w2_trial_counts
+        aw_quad_trial_counts = w1_trial_counts
+
+        pw_1_latency = w2_latency
+        aw_1_latency = w1_latency
+
+     #   pw_ID = 2
+    
+    pw_ratio_2_1 = (pw_quad_2/pw_quad_1)*100
+    pw_ratio_4_1 = (pw_quad_4/pw_quad_1)*100
+    
+    aw_ratio_2_1 = (aw_quad_2/aw_quad_1)*100
+    aw_ratio_4_1 = (aw_quad_4/aw_quad_1)*100
+
+    return pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1 
