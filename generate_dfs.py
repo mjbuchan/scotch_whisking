@@ -128,12 +128,17 @@ def build_dfs(date, data_type):
 
     l4_top, l4_bottom, l4, l23_top, l23_bottom, l23 = up.calculate_l4(csd, unit_depths, date, 'spec')
 
-    #print('layer split complete')
+    time = np.arange(0,25,1)
 
-    # plt.savefig(os.path.join(figsave, date, 'csd.svg'))
-    # plt.savefig(os.path.join(figsave, date, 'csd.png'))
+    if pw_ID == 1: 
 
-    #build dataframe
+       w1_autocorr, w1_tau, w1_fit = whisk.intrinsic_timescale(single_whisk_1, time)
+    
+    if pw_ID == 2:
+
+       w1_autocorr, w1_tau, w1_fit = whisk.intrinsic_timescale(single_whisk_2, time)
+
+#build dataframe
 
     data = {'date': dates, 'label': labels, 'depths': unit_depths, 'rs': rs_units, 'fs': fs_units, 
            'opto_rs': opto_rs_units, 'opto_fs': opto_fs_units, 't2p': pop_t2p,
@@ -144,13 +149,9 @@ def build_dfs(date, data_type):
            'pw_4': pw_quad_4, 'aw_1': aw_quad_1, 'aw_2': aw_quad_2, 'aw_3': aw_quad_3,'aw_4': aw_quad_4,
            'opto_resp_perc': opto_resp_perc, 'opto_bin_resp': opto_bin_responses, 'spont_resp': big_spont_responses,
            'stpr_1st': stpr_1st_half, 'stpr_2nd': stpr_2nd_half, 'entropy': unit_entropy, 'opto_latency': opto_latency,
-        #    'pw_freq_4': pw_freq_counts[0], 'pw_freq_8': pw_freq_counts[1], 'pw_freq_12': pw_freq_counts[2], 'pw_freq_16': pw_freq_counts[3],'pw_freq_20': pw_freq_counts[4],
-        #    'aw_freq_4': aw_freq_counts[0], 'aw_freq_8': aw_freq_counts[1], 'aw_freq_12': aw_freq_counts[2], 'aw_freq_16': aw_freq_counts[3],'aw_freq_20': aw_freq_counts[4],
-        #    'pw_freq_resp_4': pw_freq_resps[0], 'pw_freq_resp_8': pw_freq_resps[1], 'pw_freq_resp_12': pw_freq_resps[2], 'pw_freq_resp_16': pw_freq_resps[3], 'pw_freq_resp_20': pw_freq_resps[4],
-        #    'aw_freq_resp_4': aw_freq_resps[0], 'aw_freq_resp_8': aw_freq_resps[1], 'aw_freq_resp_12': aw_freq_resps[2], 'aw_freq_resp_16': aw_freq_resps[3], 'aw_freq_resp_20': aw_freq_resps[4],
-        #    'pw_freq_latency_4': pw_freq_latency[0], 'pw_freq_latency_8': pw_freq_latency[1], 'pw_freq_latency_12': pw_freq_latency[2], 'pw_freq_latency_16': pw_freq_latency[3], 'pw_freq_latency_20': pw_freq_latency[4],
-        #    'aw_freq_latency_4': aw_freq_latency[0], 'aw_freq_latency_8': aw_freq_latency[1], 'aw_freq_latency_12': aw_freq_latency[2], 'aw_freq_latency_16': aw_freq_latency[3], 'aw_freq_latency_20': aw_freq_latency[4],
-           'opto_spont': opto_spont, 'pw_trial_counts':pw_trial_counts, 'aw_trial_counts': aw_trial_counts, 'pw_quad_trial_counts': pw_quad_trial_counts, 'aw_quad_trial_counts': aw_quad_trial_counts, 'opto_trial_counts': opto_trial_counts}
+           'opto_spont': opto_spont, 'pw_trial_counts':pw_trial_counts, 'aw_trial_counts': aw_trial_counts, 
+           'pw_quad_trial_counts': pw_quad_trial_counts, 'aw_quad_trial_counts': aw_quad_trial_counts, 'opto_trial_counts': opto_trial_counts,
+           'autocorr': w1_autocorr.tolist(), 'tau': w1_tau.tolist(), 'fit': w1_fit.tolist()}
 
 
     import pandas as pd

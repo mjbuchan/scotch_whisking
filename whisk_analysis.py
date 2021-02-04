@@ -53,14 +53,14 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
             unit_latency.append(latency)
 
-        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.005)].tolist() 
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.025) & (np.array(unit_latency) > 0.006)].tolist() 
 
         w1_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w1_resp_perc.append(unit_response)
 
         if np.array(unit_latency).sum() > 0: 
 
-            w1_latency.append(min(unit_latency))
+            w1_latency.append(np.nanmean(unit_latency,0))
 
         else: 
 
@@ -105,14 +105,14 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
             unit_latency.append(latency)
 
-        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.005)].tolist() 
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.025) & (np.array(unit_latency) > 0.006)].tolist() 
 
         w2_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w2_resp_perc.append(unit_response)
         
         if np.array(unit_latency).sum() > 0: 
 
-            w2_latency.append(min(unit_latency))
+            w2_latency.append(np.nanmean(unit_latency,0))
 
         else: 
 
@@ -228,14 +228,14 @@ def dual_whisk_quad_analysis(pw_ID, whisk_1, whisk_2, w1_avg_response, w2_avg_re
 
             unit_latency.append(latency)
 
-        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.005)].tolist() 
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.025) & (np.array(unit_latency) > 0.006)].tolist() 
 
         w1_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w1_resp_perc.append(unit_response)
         
         if np.array(unit_latency).sum() > 0: 
 
-            w1_latency.append(min(unit_latency))
+            w1_latency.append(np.nanmean(unit_latency,0))
 
         else: 
 
@@ -277,14 +277,14 @@ def dual_whisk_quad_analysis(pw_ID, whisk_1, whisk_2, w1_avg_response, w2_avg_re
 
             unit_latency.append(latency)
 
-        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.02) & (np.array(unit_latency) > 0.005)].tolist() 
+        unit_latency = np.array(unit_latency)[(np.array(unit_latency) < 0.025) & (np.array(unit_latency) > 0.006)].tolist() 
 
         w2_trial_counts.append(np.nanmean(unit_trial_count, axis = 0))
         w2_resp_perc.append(unit_response)
         
         if np.array(unit_latency).sum() > 0: 
 
-            w2_latency.append(min(unit_latency))
+            w2_latency.append(np.nanmean(unit_latency,0))
 
         else: 
 
@@ -1439,3 +1439,63 @@ def dual_whisk_quad_analysis_10ms(pw_ID, whisk_1, whisk_2, w1_avg_response, w2_a
     return pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1 
 
 
+def intrinsic_timescale(data, time):
+    
+    import numpy as np
+    
+
+    w_autocorr = np.zeros((len(data), 25))
+
+    w_tau = np.zeros((len(data)))
+
+    w_fit = np.zeros((len(data), 25))
+
+    for counter, neuron in enumerate(data):
+    
+        hist = [np.histogram(trial, 300, range = (0,3))[0] for trial in neuron]
+    
+        corr = [autocorr(trial[100:125]) for trial in hist]
+
+        w_autocorr[counter] = np.nanmean(corr,0)
+
+    
+    for counter, neuron in enumerate(w_autocorr):
+    
+        if neuron.sum() > 0:
+        
+            w_tau[counter] = compute_intrinsic_tau(time, neuron)[0]
+            w_fit[counter] = compute_intrinsic_tau(time, neuron)[1]
+        
+        else: 
+        
+            w_tau[counter] = float('NaN')
+            w_fit[counter] = float('NaN')
+            
+    return w_autocorr, w_tau, w_fit
+
+def autocorr(x):
+    
+    import numpy as np 
+    import scipy.ndimage as nd 
+    
+    result = np.correlate(x, x, mode='full')
+    result = nd.gaussian_filter(result,1)
+    result = result / float(result.max())
+    return result[result.size // 2:]
+
+def exponential(x, a, b):
+    import numpy as np
+    
+    return a*np.exp(b*x)
+
+def compute_intrinsic_tau(x_data, y_data):
+    
+    from scipy.optimize import curve_fit
+    import numpy as np
+    
+    y_data = autocorr(y_data)
+    pars, cov = curve_fit(f=exponential, xdata=x_data, ydata=y_data, p0=[0, 0], bounds=(-np.inf, np.inf))
+    exp = exponential(x_data, *pars)
+    tau = -1/pars[1]
+
+    return tau, exp
