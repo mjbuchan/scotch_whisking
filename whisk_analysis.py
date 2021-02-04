@@ -1437,3 +1437,5 @@ def dual_whisk_quad_analysis_10ms(pw_ID, whisk_1, whisk_2, w1_avg_response, w2_a
     aw_ratio_4_1 = (aw_quad_4/aw_quad_1)*100
 
     return pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1 
+
+
