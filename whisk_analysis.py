@@ -404,11 +404,11 @@ def set_data_measure(df, opto_rs, non_opto_rs, measure, avg_type):
             
             else:
 
-                # avg_opto.append(np.nanmean(df[measure][opto_date_mask]))
-                # avg_non_opto.append(np.nanmean(df[measure][non_opto_date_mask]))
+                avg_opto.append(np.nanmean(df[measure][opto_date_mask]))
+                avg_non_opto.append(np.nanmean(df[measure][non_opto_date_mask]))
 
-                avg_opto.append(np.mean(df[measure][opto_date_mask]))
-                avg_non_opto.append(np.mean(df[measure][non_opto_date_mask]))
+                #avg_opto.append(np.mean(df[measure][opto_date_mask]))
+                #avg_non_opto.append(np.mean(df[measure][non_opto_date_mask]))
 
         else: 
             
@@ -485,23 +485,23 @@ def plot_aIP_pairs(data, bin_size, title, ylabel):
     
     plt.figure(figsize = (1.5,3))
 
-    palette = ('limegreen', 'darkolivegreen')
+    palette = ('limegreen', 'darkgreen')
     x_labels = ['PW', 'AW']
 
     ax = sns.stripplot(data = data, size = 6, linewidth = 0, jitter = 0, palette = palette, zorder = 0)
 
-    plt.hlines(np.mean(data[0]), -.1, .1)
-    plt.hlines(np.mean(data[1]), .9, 1.1)
+    plt.hlines(np.mean(data[0]), -.1, .1, color = 'black')
+    plt.hlines(np.mean(data[1]), .9, 1.1, color = 'black')
 
     plt.vlines(0, np.mean(data[0])-st.sem(data[0]),
-                    np.mean(data[0])+st.sem(data[0]))
+                    np.mean(data[0])+st.sem(data[0]), color = 'black')
 
     plt.vlines(1, np.mean(data[1])-st.sem(data[1]),
-                    np.mean(data[1])+st.sem(data[1]))
+                    np.mean(data[1])+st.sem(data[1]), color = 'black')
 
     for points in range(len(data[0])):
 
-        plt.plot((0, 1), (data[0][points], data[1][points]), color = 'grey', alpha = 0.1)
+        plt.plot((0, 1), (data[0][points], data[1][points]), color = 'black', linewidth = 0.2)
 
     ax.set_xticklabels(x_labels)
 
@@ -539,23 +539,23 @@ def plot_OP_pairs(data, bin_size, title, ylabel):
     
     plt.figure(figsize = (1.5,3))
 
-    palette = ('r', 'rosybrown')
+    palette = ('lightgrey', 'grey')
     x_labels = ['PW', 'AW']
 
     ax = sns.stripplot(data = data, size = 6, linewidth = 0, jitter = 0, palette = palette, zorder = 0)
 
-    plt.hlines(np.mean(data[0]), -.1, .1)
-    plt.hlines(np.mean(data[1]), .9, 1.1)
+    plt.hlines(np.mean(data[0]), -.1, .1, color = 'black')
+    plt.hlines(np.mean(data[1]), .9, 1.1, color = 'black')
 
     plt.vlines(0, np.mean(data[0])-st.sem(data[0]),
-                    np.mean(data[0])+st.sem(data[0]))
+                    np.mean(data[0])+st.sem(data[0]), color = 'black')
 
     plt.vlines(1, np.mean(data[1])-st.sem(data[1]),
-                    np.mean(data[1])+st.sem(data[1]))
+                    np.mean(data[1])+st.sem(data[1]), color = 'black')
 
     for points in range(len(data[0])):
 
-        plt.plot((0, 1), (data[0][points], data[1][points]), color = 'grey', alpha = 0.1)
+        plt.plot((0, 1), (data[0][points], data[1][points]), color = 'black', linewidth = 0.2)
 
     ax.set_xticklabels(x_labels)
 
@@ -594,22 +594,22 @@ def plot_versus_pairs(data, bin_size, title, ylabel):
     
     plt.figure(figsize = (1.5,3))
 
-    palette = ('limegreen', 'r')
-    x_labels = ['aIP', 'OP']
+    palette = ('limegreen', 'grey')
+    x_labels = ['aIP-der', 'OP-der']
 
     ax = sns.stripplot(data = data, size = 6, linewidth = 0, jitter = 0, palette = palette, zorder = 0)
 
-    plt.hlines(np.mean(data[0]), -.1, .1)
-    plt.hlines(np.mean(data[1]), .9, 1.1)
+    plt.hlines(np.mean(data[0]), -.1, .1, color = 'black')
+    plt.hlines(np.mean(data[1]), .9, 1.1, color = 'black')
 
     plt.vlines(0, np.mean(data[0])-st.sem(data[0]),
-                    np.mean(data[0])+st.sem(data[0]))
+                    np.mean(data[0])+st.sem(data[0]), color = 'black')
 
     plt.vlines(1, np.mean(data[1])-st.sem(data[1]),
-                    np.mean(data[1])+st.sem(data[1]))
+                    np.mean(data[1])+st.sem(data[1]), color = 'black')
 
 
-    ax.set_xticklabels(x_labels)
+    ax.set_xticklabels(x_labels, rotation = 90)
 
     plt.xlim(-.5, 1.5)
     

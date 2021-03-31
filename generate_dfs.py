@@ -12,29 +12,29 @@ def build_dfs(date, data_type):
 
     # set paths
 
-    if data_type == 'ChR2_ON':
+    if data_type == 'chr2_on':
 
-       path = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_ON/data'
+       path = '/Users/matthewbuchan/Desktop/data_backup/in_vivo/chr2_on/data'
 
-       save = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_ON/processed_dfs'
+       save = '/Users/matthewbuchan/Desktop/data_backup/in_vivo/chr2_on/processed_dfs'
 
-       figsave = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_ON/figures'
+       figsave = '/Users/matthewbuchan/Desktop/data_backup/in_vivo/chr2_on/figures'
 
-    if data_type == 'CAG_lhx2':
+    if data_type == 'cag_lhx2':
 
-       path = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/CAG_lhx2/data'
+       path = '/Users/matthewbuchan/Desktop/data_backup/in_vivo/cag_lhx2/data'
 
-       save = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/CAG_lhx2/processed_dfs'
+       save = '/Users/matthewbuchan/Desktop/data_backup/in_vivo/cag_lhx2/processed_dfs'
 
-       figsave = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/CAG_lhx2/figures'
+       figsave = '/Users/matthewbuchan/Desktop/data_backup/in_vivo/cag_lhx2/figures'
 
-    if data_type == 'ChR2_CAG':
+    if data_type == 'chr2_cag':
 
-       path = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_CAG/data'
+       path = '/Users/matthewbuchan/Desktop/data_backup/in_vivo/chr2_cag/data'
 
-       save = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_CAG/processed_dfs'
+       save = '/Users/matthewbuchan/Desktop/data_backup/in_vivo/chr2_cag/processed_dfs'
 
-       figsave = '/Volumes/Seagate Expansion Drive/data_backup/data/in_vivo/ChR2_CAG/figures'
+       figsave = '/Users/matthewbuchan/Desktop/data_backup/in_vivo/chr2_cag/figures'
 
     # load data
 
