@@ -1502,3 +1502,13 @@ def compute_intrinsic_tau(x_data, y_data):
     tau = -1/pars[1]
 
     return tau, exp
+
+def compute_peak_latency(pw_counts, aw_counts):
+
+    import numpy as np
+    import scipy.ndimage as nd
+
+    pw_peak_latency = [np.argmax(i[1000:1050]) for i in nd.gaussian_filter(pw_counts, sigma = 2.5)]
+    aw_peak_latency = [np.argmax(i[1000:1050]) for i in nd.gaussian_filter(aw_counts, sigma = 2.5)]
+
+    return pw_peak_latency, aw_peak_latency

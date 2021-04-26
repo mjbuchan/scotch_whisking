@@ -138,6 +138,8 @@ def build_dfs(date, data_type):
 
        w1_autocorr, w1_tau, w1_fit = whisk.intrinsic_timescale(single_whisk_2, time)
 
+    pw_peak_latency, aw_peak_latency = whisk.compute_peak_latency(pw_trial_counts, aw_trial_counts)
+
 #build dataframe
 
     data = {'date': dates, 'label': labels, 'depths': unit_depths, 'rs': rs_units, 'fs': fs_units, 
@@ -151,7 +153,7 @@ def build_dfs(date, data_type):
            'stpr_1st': stpr_1st_half, 'stpr_2nd': stpr_2nd_half, 'entropy': unit_entropy, 'opto_latency': opto_latency,
            'opto_spont': opto_spont, 'pw_trial_counts':pw_trial_counts, 'aw_trial_counts': aw_trial_counts, 
            'pw_quad_trial_counts': pw_quad_trial_counts, 'aw_quad_trial_counts': aw_quad_trial_counts, 'opto_trial_counts': opto_trial_counts,
-           'autocorr': w1_autocorr.tolist(), 'tau': w1_tau.tolist(), 'fit': w1_fit.tolist()}
+           'autocorr': w1_autocorr.tolist(), 'tau': w1_tau.tolist(), 'fit': w1_fit.tolist(), 'pw_peak_latency': pw_peak_latency, 'aw_peak_latency': aw_peak_latency}
 
 
     import pandas as pd
