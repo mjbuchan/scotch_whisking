@@ -143,7 +143,7 @@ def plot_pre_post_trace(avg_pre_trace, avg_post_trace, condition):
     pre_trace_sem = st.sem(avg_pre_trace,0)
     post_trace_sem = st.sem(avg_post_trace,0)
 
-    plt.figure(figsize = (3,3))
+    plt.figure(figsize = (1.5,1.5))
 
     plotting_pre = nd.gaussian_filter(pre_trace-np.mean(avg_pre_trace),1)[950:1250]/0.001
     plotting_post = nd.gaussian_filter(post_trace-np.mean(post_trace),1)[950:1250]/0.001
@@ -151,8 +151,8 @@ def plot_pre_post_trace(avg_pre_trace, avg_post_trace, condition):
     plotting_pre_sem = nd.gaussian_filter(np.array(pre_trace_sem),1)[950:1250]/0.001
     plotting_post_sem = nd.gaussian_filter(np.array(post_trace_sem),1)[950:1250]/0.001
 
-    plt.plot(np.arange(-50, 250, 1), plotting_pre, color = palette[0])
-    plt.plot(np.arange(-50, 250, 1), plotting_post, color = palette[1])
+    plt.plot(np.arange(-50, 250, 1), plotting_pre, color = palette[0], linewidth = 2)
+    plt.plot(np.arange(-50, 250, 1), plotting_post, color = palette[1], linewidth = 2)
 
     plt.fill_between(np.arange(-50, 250, 1), plotting_pre - 2*plotting_pre_sem, plotting_pre + 2*plotting_pre_sem, color = palette[0], alpha = 0.2)
     plt.fill_between(np.arange(-50, 250, 1), plotting_post - 2*plotting_post_sem, plotting_post + 2*plotting_post_sem, color = palette[1], alpha = 0.2)
@@ -160,8 +160,8 @@ def plot_pre_post_trace(avg_pre_trace, avg_post_trace, condition):
     plt.xlabel('Time (ms)')
     plt.ylabel('Spike rate (Hz)')
 
-    plt.text(100,600, 'Pre', color = palette[0])
-    plt.text(100,500, 'Post', color = palette[1])
+    plt.text(130,900, 'Pre', color = palette[0])
+    plt.text(130,700, 'Post', color = palette[1])
 
     plt.xlim(-50, 250)
     plt.ylim(0,1000)
@@ -199,6 +199,10 @@ def plot_pre_post_resp(res_pre, res_post, std_res_pre, std_res_post, condition):
     plt.xlabel('Time (min)')
     plt.ylabel('Normalised spike rate')
 
+    if condition == 'lhx2':
+        plt.text(-10,4, 'WT', color = 'limegreen')
+        plt.text(-10,3,'Lhx2+', color = 'rebeccapurple')
+
 def plot_pre_post_paired(data, condition):  
 
     import numpy as np
@@ -207,7 +211,7 @@ def plot_pre_post_paired(data, condition):
     import seaborn as sns
 
     
-    plt.figure(figsize = (1.5,3))
+    plt.figure(figsize = (1.5,1.5))
 
     if condition == 'chr2':
         
@@ -269,15 +273,15 @@ def plot_single_example(pre_resp, post_resp, condition):
     plt.scatter(np.arange(60/60,1060/60,(1000/60)/100), post_resp, label = 'post', s = 12, color = palette[1])
 
     plt.xlabel('Time (min)')
-    plt.ylabel('Spike rate (Hz)')
+    plt.ylabel('Normalised spike rate')
     
     plt.xlim(-18, 18)
-    plt.ylim(-50, 150)
+    plt.ylim(-4, 6)
     
     plt.hlines(np.mean(pre_resp,0), -1000/60, 1000/60, ls = ':', color = 'black')
     plt.vlines(0.3, -50, 150, color = 'black', linewidth = 3, alpha = 0.2)
 
-    plt.text(-7, -40, 'RWS', color = 'grey')
+    plt.text(-7, -3, 'RWS', color = 'grey')
 
 
 def plot_single_traces(pre_trace, post_trace, condition):
@@ -294,16 +298,18 @@ def plot_single_traces(pre_trace, post_trace, condition):
         
         palette = ['grey', 'rebeccapurple']
     
-    plt.figure(figsize = (3,3))
+    plt.figure(figsize = (1.5,1.5))
 
-    plt.plot(np.arange(-50,250,1), (nd.gaussian_filter(pre_trace/0.001,2)[950:1250]-np.mean(pre_trace,0)), color = palette[0])
-    plt.plot(np.arange(-50,250,1), (nd.gaussian_filter(post_trace/0.001,2)[950:1250]-np.mean(post_trace,0)), color = palette[1])
+    plt.plot(np.arange(-50,250,1), (nd.gaussian_filter(pre_trace/0.001,2)[950:1250]-np.mean(pre_trace,0)), color = palette[0], linewidth = 2)
+    plt.plot(np.arange(-50,250,1), (nd.gaussian_filter(post_trace/0.001,2)[950:1250]-np.mean(post_trace,0)), color = palette[1], linewidth = 2)
 
     plt.xlabel('Time (ms)')
     plt.ylabel('Spike Rate (Hz)')
 
     plt.ylim(0,1200)
 
+    plt.text(130, 900, 'Pre', color = palette[0])
+    plt.text(130, 700, 'Post', color = palette[1])
 
 def generate_single_example(date, condition):
 
@@ -378,8 +384,8 @@ def generate_single_example(date, condition):
   #  mean_pre_opto = np.mean(pre_opto)
   #  std_pre_opto = np.std(pre_opto)
 
-    #pre_resp = (pre_resp-mean_pre_resp)/std_pre_resp
-    #post_resp = (post_resp-mean_pre_resp)/std_pre_resp
+    pre_resp = (pre_resp-mean_pre_resp)/std_pre_resp
+    post_resp = (post_resp-mean_pre_resp)/std_pre_resp
     
     #pre_opto = (pre_opto - mean_pre_opto)/std_pre_opto
     #post_opto = (post_opto - mean_pre_opto)/std_pre_opto
