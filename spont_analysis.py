@@ -194,6 +194,8 @@ def calculate_coupling(spikes, lfp, mua, method):
 
         population_stlfp.append(np.nanmean(unit_stlfp, axis = 0))
 
+    population_stlfp = np.array(population_stlfp)
+
     #STPR
     population_stpr = []
     stpr_1st_half = []

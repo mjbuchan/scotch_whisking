@@ -164,7 +164,7 @@ def plot_pre_post_trace(avg_pre_trace, avg_post_trace, condition):
     plt.text(130,700, 'Post', color = palette[1])
 
     plt.xlim(-50, 250)
-    plt.ylim(0,1000)
+    plt.ylim(0,1200)
 
 def plot_pre_post_resp(res_pre, res_post, std_res_pre, std_res_post, condition):
     
@@ -194,7 +194,7 @@ def plot_pre_post_resp(res_pre, res_post, std_res_pre, std_res_post, condition):
     plt.hlines(0, -1000/60, 1000/60, ls = ':', color = 'black')
     plt.vlines(0.2, -2, 6, color = 'black', linewidth = 3, alpha = 0.2)
 
-    plt.text(-7, -1.5, 'RWS', color = 'grey')
+    plt.text(-7, -1.5, 'RWS', color = 'black')
 
     plt.xlabel('Time (min)')
     plt.ylabel('Normalised spike rate')
@@ -259,7 +259,7 @@ def plot_single_example(pre_resp, post_resp, condition):
     import numpy as np
     import scipy.stats as st 
 
-    plt.figure(figsize = (3,3))
+    plt.figure(figsize = (1.5,1.5))
 
     if condition == 'chr2':
     
@@ -273,7 +273,7 @@ def plot_single_example(pre_resp, post_resp, condition):
     plt.scatter(np.arange(60/60,1060/60,(1000/60)/100), post_resp, label = 'post', s = 12, color = palette[1])
 
     plt.xlabel('Time (min)')
-    plt.ylabel('Normalised spike rate')
+    plt.ylabel('Normalised \nspike rate')
     
     plt.xlim(-18, 18)
     plt.ylim(-4, 6)
@@ -281,7 +281,7 @@ def plot_single_example(pre_resp, post_resp, condition):
     plt.hlines(np.mean(pre_resp,0), -1000/60, 1000/60, ls = ':', color = 'black')
     plt.vlines(0.3, -50, 150, color = 'black', linewidth = 3, alpha = 0.2)
 
-    plt.text(-7, -3, 'RWS', color = 'grey')
+    plt.text(-15, 5, 'RWS', color = 'black')
 
 
 def plot_single_traces(pre_trace, post_trace, condition):
