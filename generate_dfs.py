@@ -5,6 +5,7 @@ def build_dfs(date, data_type):
     import matplotlib.pyplot as plt
     import numpy as np
     sns.set_context('talk')
+    from scipy.io import loadmat
 
     import scotch_whisking.whisk_analysis as whisk
     import scotch_whisking.unit_preprocessing as up
@@ -93,6 +94,11 @@ def build_dfs(date, data_type):
 
     population_stpr, population_stlfp, unit_mua_coupling, unit_lfp_coupling, stpr_1st_half, stpr_2nd_half = spont.calculate_coupling(spont_spikes, spont_lfp, spont_mua_spikes, 'single_unit')
 
+    population_strip = []
+
+    [population_strip.append(i) for i in population_stpr]
+
+    population_stpr = population_strip
     # import matplotlib.pyplot as plt
 
     # [plt.plot(stpr) for stpr in population_stpr[rs_units]]
@@ -112,10 +118,7 @@ def build_dfs(date, data_type):
 
     pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1  = whisk.dual_whisk_quad_analysis(pw_ID, quad_whisk_1, quad_whisk_2, w1_avg_response, w2_avg_response)
 
-    #perform frequency analysis
-
-    #pw_freq_counts, aw_freq_counts, pw_freq_resps, aw_freq_resps, pw_freq_latency, aw_freq_latency = whisk.frequency_analysis(freq_spikes_1, freq_spikes_2, w1_avg_response, w2_avg_response)
-
+   
     ## calculate CSD profile from electrode depths
 
     csd = up.calculate_csd(lfp_1, lfp_2, 1, pw_ID)
@@ -140,12 +143,92 @@ def build_dfs(date, data_type):
 
     pw_peak_latency, aw_peak_latency = whisk.compute_peak_latency(pw_trial_counts, aw_trial_counts)
 
+
+    experiment = 'frequency'
+
+    spikes_1_4 = loadmat(os.path.join(path, date, experiment, 'spikes_1_4'))
+    spikes_2_4 = loadmat(os.path.join(path, date, experiment, 'spikes_2_4'))
+
+    spikes_1_4 = spikes_1_4['spikes_1_4']
+    spikes_2_4 = spikes_2_4['spikes_2_4']
+
+    spikes_1_8 = loadmat(os.path.join(path, date, experiment, 'spikes_1_8'))
+    spikes_2_8 = loadmat(os.path.join(path, date, experiment, 'spikes_2_8'))
+
+    spikes_1_8 = spikes_1_8['spikes_1_8']
+    spikes_2_8 = spikes_2_8['spikes_2_8']
+
+    spikes_1_16 = loadmat(os.path.join(path, date, experiment, 'spikes_1_16'))
+    spikes_2_16 = loadmat(os.path.join(path, date, experiment, 'spikes_2_16'))
+
+    spikes_1_16 = spikes_1_16['spikes_1_16']
+    spikes_2_16 = spikes_2_16['spikes_2_16']
+
+    lfp_1_4 = loadmat(os.path.join(path, date, experiment, 'lfp_1_4'))
+    lfp_2_4 = loadmat(os.path.join(path, date, experiment, 'lfp_2_4'))
+
+    lfp_1_4 = np.mean(lfp_1_4['lfp_1_4'][8:16],0)
+    lfp_2_4 = np.mean(lfp_2_4['lfp_2_4'][8:16],0)
+
+    lfp_1_8 = loadmat(os.path.join(path, date, experiment, 'lfp_1_8'))
+    lfp_2_8 = loadmat(os.path.join(path, date, experiment, 'lfp_2_8'))
+
+    lfp_1_8 = np.mean(lfp_1_8['lfp_1_8'][8:16],0)
+    lfp_2_8 = np.mean(lfp_2_8['lfp_2_8'][8:16],0)
+
+    lfp_1_16 = loadmat(os.path.join(path, date, experiment, 'lfp_1_16'))
+    lfp_2_16 = loadmat(os.path.join(path, date, experiment, 'lfp_2_16'))
+
+    lfp_1_16 = np.mean(lfp_1_16['lfp_1_16'][8:16],0)
+    lfp_2_16 = np.mean(lfp_2_16['lfp_2_16'][8:16],0)
+    #4Hz
+
+    hilbert_1_real, hilbert_1_imag = whisk.transform_lfp(lfp_1_4, 3, 5)
+    hilbert_2_real, hilbert_2_imag = whisk.transform_lfp(lfp_2_4, 3, 5)
+
+    pw_ppc_4, aw_ppc_4 = whisk.whisk_phase(pw_ID, spikes_1_4, hilbert_1_real, hilbert_1_imag, spikes_2_4, hilbert_2_real, hilbert_2_imag)
+
+   #8Hz
+
+    hilbert_1_real, hilbert_1_imag = whisk.transform_lfp(lfp_1_8, 7, 9)
+    hilbert_2_real, hilbert_2_imag = whisk.transform_lfp(lfp_2_8, 7, 9)
+
+    pw_ppc_8, aw_ppc_8 = whisk.whisk_phase(pw_ID, spikes_1_8, hilbert_1_real, hilbert_1_imag, spikes_2_8, hilbert_2_real, hilbert_2_imag)
+
+   #16Hz
+
+    hilbert_1_real, hilbert_1_imag = whisk.transform_lfp(lfp_1_16, 15, 17)
+    hilbert_2_real, hilbert_2_imag = whisk.transform_lfp(lfp_2_16, 15, 17)
+
+    pw_ppc_16, aw_ppc_16 = whisk.whisk_phase(pw_ID, spikes_1_16, hilbert_1_real, hilbert_1_imag, spikes_2_16, hilbert_2_real, hilbert_2_imag)
+
+    if pw_ID == 1:
+
+       aw_trace_4, aw_train_4, aw_idx_4 = whisk.quick_stim_freq(spikes_2_4, 4)
+       pw_trace_4, pw_train_4, pw_idx_4 = whisk.quick_stim_freq(spikes_1_4, 4)
+
+       aw_trace_8, aw_train_8, aw_idx_8 = whisk.quick_stim_freq(spikes_2_8, 8)
+       pw_trace_8, pw_train_8, pw_idx_8 = whisk.quick_stim_freq(spikes_1_8, 8)
+
+       aw_trace_16, aw_train_16, aw_idx_16 = whisk.quick_stim_freq(spikes_2_16, 16)
+       pw_trace_16, pw_train_16, pw_idx_16 = whisk.quick_stim_freq(spikes_1_16, 16)
+
+    if pw_ID == 2:
+
+       aw_trace_4, aw_train_4, aw_idx_4 = whisk.quick_stim_freq(spikes_1_4, 4)
+       pw_trace_4, pw_train_4, pw_idx_4 = whisk.quick_stim_freq(spikes_2_4, 4)
+
+       aw_trace_8, aw_train_8, aw_idx_8 = whisk.quick_stim_freq(spikes_1_8, 8)
+       pw_trace_8, pw_train_8, pw_idx_8 = whisk.quick_stim_freq(spikes_2_8, 8)
+
+       aw_trace_16, aw_train_16, aw_idx_16 = whisk.quick_stim_freq(spikes_1_16, 16)
+       pw_trace_16, pw_train_16, pw_idx_16 = whisk.quick_stim_freq(spikes_2_16, 16)
 #build dataframe
 
     data = {'date': dates, 'label': labels, 'depths': unit_depths, 'rs': rs_units, 'fs': fs_units, 
            'opto_rs': opto_rs_units, 'opto_fs': opto_fs_units, 't2p': pop_t2p,
            'half_width': pop_half_width[:,0], 'l4': l4, 'l23': l23, 'mua_coupling': unit_mua_coupling,
-           'lfp_coupling': unit_lfp_coupling, 'pw_resp_perc': pw_resp_perc, 'pw_latency': pw_latency, 'pw_1_latency': pw_1_latency, 
+           'lfp_coupling': unit_lfp_coupling, 'stpr': population_stpr, 'pw_resp_perc': pw_resp_perc, 'pw_latency': pw_latency, 'pw_1_latency': pw_1_latency, 
            'pw_bin_resp': pw_bin_responses, 'aw_resp_perc': aw_resp_perc, 'aw_latency': aw_latency, 'aw_1_latency': aw_1_latency,
            'aw_bin_resp': aw_bin_responses, 'pw_1': pw_quad_1, 'pw_2': pw_quad_2, 'pw_3': pw_quad_3,
            'pw_4': pw_quad_4, 'aw_1': aw_quad_1, 'aw_2': aw_quad_2, 'aw_3': aw_quad_3,'aw_4': aw_quad_4,
@@ -153,7 +236,11 @@ def build_dfs(date, data_type):
            'stpr_1st': stpr_1st_half, 'stpr_2nd': stpr_2nd_half, 'entropy': unit_entropy, 'opto_latency': opto_latency,
            'opto_spont': opto_spont, 'pw_trial_counts':pw_trial_counts, 'aw_trial_counts': aw_trial_counts, 
            'pw_quad_trial_counts': pw_quad_trial_counts, 'aw_quad_trial_counts': aw_quad_trial_counts, 'opto_trial_counts': opto_trial_counts,
-           'autocorr': w1_autocorr.tolist(), 'tau': w1_tau.tolist(), 'fit': w1_fit.tolist(), 'pw_peak_latency': pw_peak_latency, 'aw_peak_latency': aw_peak_latency}
+           'autocorr': w1_autocorr.tolist(), 'tau': w1_tau.tolist(), 'fit': w1_fit.tolist(), 'pw_peak_latency': pw_peak_latency, 'aw_peak_latency': aw_peak_latency,
+           'aw_trace_4': aw_trace_4, 'aw_train_4': aw_train_4, 'aw_idx_4': aw_idx_4, 'pw_trace_4': pw_trace_4, 'pw_train_4': pw_train_4, 'pw_idx_4': pw_idx_4, 
+           'aw_trace_8': aw_trace_8, 'aw_train_8': aw_train_8, 'aw_idx_8': aw_idx_8, 'pw_trace_8': pw_trace_8, 'pw_train_8': pw_train_8, 'pw_idx_8': pw_idx_8,
+           'aw_trace_16': aw_trace_16, 'aw_train_16': aw_train_16, 'aw_idx_16': aw_idx_16, 'pw_trace_16': pw_trace_16, 'pw_train_16': pw_train_16, 'pw_idx_16': pw_idx_16,
+           'pw_ppc_4': pw_ppc_4, 'aw_ppc_4': aw_ppc_4, 'pw_ppc_8': pw_ppc_8, 'aw_ppc_8': aw_ppc_8, 'pw_ppc_16': pw_ppc_16, 'aw_ppc_16': aw_ppc_16}
 
 
     import pandas as pd
