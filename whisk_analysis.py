@@ -1609,7 +1609,9 @@ def whisk_phase(pw_ID, whisk_1, lfp_real_1, lfp_imag_1, whisk_2, lfp_real_2, lfp
             
             out[(xu, yu)] = False
             
-            neuron_ppc.append(np.mean(ppc_matrix[~out],0))
+            temp = np.mean(ppc_matrix[~out],0).clip(min = 0)
+            
+            neuron_ppc.append(temp)
             
         w1_ppc.append(np.nanmean(neuron_ppc,0))
         
@@ -1652,8 +1654,10 @@ def whisk_phase(pw_ID, whisk_1, lfp_real_1, lfp_imag_1, whisk_2, lfp_real_2, lfp
             out = np.ones((len(trial_vectors),len(trial_vectors)), dtype=bool)
             
             out[(xu, yu)] = False
+
+            temp = np.mean(ppc_matrix[~out],0).clip(min = 0)
             
-            neuron_ppc.append(np.mean(ppc_matrix[~out],0))
+            neuron_ppc.append(temp)
             
         w2_ppc.append(np.nanmean(neuron_ppc,0))
         
@@ -1676,12 +1680,15 @@ def quick_stim_freq(data, frequency):
 
     pre_trace = [] 
     resp_train = []
+    first_resp = []
 
     for neuron in data:
 
         hist = [np.histogram(trial, 5000, range = (0,5))[0] for trial in neuron]
 
         spont = np.mean(np.array([np.sum(trial[0:1000]) for trial in hist])/20)
+
+        temp_first_resp = np.mean(np.array([np.sum(trial[1000:1050]) for trial in hist])/0.05)
         
         temp_resp_train = []
         
@@ -1696,8 +1703,10 @@ def quick_stim_freq(data, frequency):
         resp_train.append(temp_resp_train)
         
         pre_trace.append(np.mean(hist,0))
+
+        first_resp.append(temp_first_resp)
         
     #adaptation_idx = np.array([1-(np.mean([i[-1],i[-2]])/np.mean([i[0],i[1]])) for i in resp_train]).clip(min = 0).clip(max=1)
-    adaptation_idx = np.array([(np.mean([i[-1],i[-2]])/np.mean([i[0],i[1]])) for i in resp_train]).clip(min = 0)
+    adaptation_idx = np.array([((i[-1]/i[0]))*100 for i in resp_train]).clip(min = 0, max = 100)
     
-    return pre_trace, resp_train, adaptation_idx
+    return pre_trace, resp_train, adaptation_idx, first_resp 

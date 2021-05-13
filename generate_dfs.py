@@ -204,25 +204,25 @@ def build_dfs(date, data_type):
 
     if pw_ID == 1:
 
-       aw_trace_4, aw_train_4, aw_idx_4 = whisk.quick_stim_freq(spikes_2_4, 4)
-       pw_trace_4, pw_train_4, pw_idx_4 = whisk.quick_stim_freq(spikes_1_4, 4)
+       aw_trace_4, aw_train_4, aw_idx_4, fr_aw_4 = whisk.quick_stim_freq(spikes_2_4, 4)
+       pw_trace_4, pw_train_4, pw_idx_4, fr_pw_4 = whisk.quick_stim_freq(spikes_1_4, 4)
 
-       aw_trace_8, aw_train_8, aw_idx_8 = whisk.quick_stim_freq(spikes_2_8, 8)
-       pw_trace_8, pw_train_8, pw_idx_8 = whisk.quick_stim_freq(spikes_1_8, 8)
+       aw_trace_8, aw_train_8, aw_idx_8, fr_aw_8 = whisk.quick_stim_freq(spikes_2_8, 8)
+       pw_trace_8, pw_train_8, pw_idx_8, fr_pw_8 = whisk.quick_stim_freq(spikes_1_8, 8)
 
-       aw_trace_16, aw_train_16, aw_idx_16 = whisk.quick_stim_freq(spikes_2_16, 16)
-       pw_trace_16, pw_train_16, pw_idx_16 = whisk.quick_stim_freq(spikes_1_16, 16)
+       aw_trace_16, aw_train_16, aw_idx_16, fr_aw_16 = whisk.quick_stim_freq(spikes_2_16, 16)
+       pw_trace_16, pw_train_16, pw_idx_16, fr_pw_16 = whisk.quick_stim_freq(spikes_1_16, 16)
 
     if pw_ID == 2:
 
-       aw_trace_4, aw_train_4, aw_idx_4 = whisk.quick_stim_freq(spikes_1_4, 4)
-       pw_trace_4, pw_train_4, pw_idx_4 = whisk.quick_stim_freq(spikes_2_4, 4)
+       aw_trace_4, aw_train_4, aw_idx_4, fr_aw_4  = whisk.quick_stim_freq(spikes_1_4, 4)
+       pw_trace_4, pw_train_4, pw_idx_4, fr_pw_4 = whisk.quick_stim_freq(spikes_2_4, 4)
 
-       aw_trace_8, aw_train_8, aw_idx_8 = whisk.quick_stim_freq(spikes_1_8, 8)
-       pw_trace_8, pw_train_8, pw_idx_8 = whisk.quick_stim_freq(spikes_2_8, 8)
+       aw_trace_8, aw_train_8, aw_idx_8, fr_aw_8 = whisk.quick_stim_freq(spikes_1_8, 8)
+       pw_trace_8, pw_train_8, pw_idx_8, fr_pw_8 = whisk.quick_stim_freq(spikes_2_8, 8)
 
-       aw_trace_16, aw_train_16, aw_idx_16 = whisk.quick_stim_freq(spikes_1_16, 16)
-       pw_trace_16, pw_train_16, pw_idx_16 = whisk.quick_stim_freq(spikes_2_16, 16)
+       aw_trace_16, aw_train_16, aw_idx_16, fr_aw_16 = whisk.quick_stim_freq(spikes_1_16, 16)
+       pw_trace_16, pw_train_16, pw_idx_16, fr_pw_16 = whisk.quick_stim_freq(spikes_2_16, 16)
 #build dataframe
 
     data = {'date': dates, 'label': labels, 'depths': unit_depths, 'rs': rs_units, 'fs': fs_units, 
@@ -240,6 +240,7 @@ def build_dfs(date, data_type):
            'aw_trace_4': aw_trace_4, 'aw_train_4': aw_train_4, 'aw_idx_4': aw_idx_4, 'pw_trace_4': pw_trace_4, 'pw_train_4': pw_train_4, 'pw_idx_4': pw_idx_4, 
            'aw_trace_8': aw_trace_8, 'aw_train_8': aw_train_8, 'aw_idx_8': aw_idx_8, 'pw_trace_8': pw_trace_8, 'pw_train_8': pw_train_8, 'pw_idx_8': pw_idx_8,
            'aw_trace_16': aw_trace_16, 'aw_train_16': aw_train_16, 'aw_idx_16': aw_idx_16, 'pw_trace_16': pw_trace_16, 'pw_train_16': pw_train_16, 'pw_idx_16': pw_idx_16,
+           'fr_aw_4': fr_aw_4, 'fr_pw_4': fr_pw_4, 'fr_aw_8': fr_aw_8, 'fr_pw_8': fr_pw_8, 'fr_aw_16': fr_aw_16, 'fr_pw_16': fr_pw_16,
            'pw_ppc_4': pw_ppc_4, 'aw_ppc_4': aw_ppc_4, 'pw_ppc_8': pw_ppc_8, 'aw_ppc_8': aw_ppc_8, 'pw_ppc_16': pw_ppc_16, 'aw_ppc_16': aw_ppc_16}
 
 
