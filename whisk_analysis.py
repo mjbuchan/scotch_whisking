@@ -325,6 +325,18 @@ def dual_whisk_quad_analysis(pw_ID, whisk_1, whisk_2, w1_avg_response, w2_avg_re
     w2_resp_3 = np.where(w2_resp_3<0, 0.001, w2_resp_3)
     w2_resp_4 = np.where(w2_resp_4<0, 0.001, w2_resp_4)
 
+    w1_total = [np.sum(resp[1000:1500]) for resp in w1_trial_counts]
+    w2_total = [np.sum(resp[1000:1500]) for resp in w2_trial_counts]
+
+    w1_spont_total = [np.sum(resp[2500:3000]) for resp in w1_trial_counts]
+    w2_spont_total = [np.sum(resp[2500:3000]) for resp in w1_trial_counts]
+
+    w1_total = np.array(w1_total) - np.array(w1_spont_total).tolist()
+    w2_total = np.array(w2_total) - np.array(w2_spont_total).tolist()
+
+    w1_total = np.where(w1_total<0, 0.001, w1_total)
+    w2_total = np.where(w2_total<0, 0.001, w2_total)
+
     #if w1_avg_response > w2_avg_response:
 
     #if np.nanmean(np.array(w1_latency)) < np.nanmean(np.array(w2_latency)):
@@ -346,6 +358,9 @@ def dual_whisk_quad_analysis(pw_ID, whisk_1, whisk_2, w1_avg_response, w2_avg_re
 
         pw_1_latency = w1_latency
         aw_1_latency = w2_latency
+
+        pw_total = w1_total
+        aw_total = w2_total
 
     #    pw_ID = 1
 
@@ -371,6 +386,9 @@ def dual_whisk_quad_analysis(pw_ID, whisk_1, whisk_2, w1_avg_response, w2_avg_re
         pw_1_latency = w2_latency
         aw_1_latency = w1_latency
 
+        pw_total = w1_total
+        aw_total = w2_total
+
      #   pw_ID = 2
     
     pw_ratio_2_1 = (pw_quad_2/pw_quad_1)*100
@@ -379,7 +397,7 @@ def dual_whisk_quad_analysis(pw_ID, whisk_1, whisk_2, w1_avg_response, w2_avg_re
     aw_ratio_2_1 = (aw_quad_2/aw_quad_1)*100
     aw_ratio_4_1 = (aw_quad_4/aw_quad_1)*100
 
-    return pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1 
+    return pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1, pw_total, aw_total
 
 
 def set_data_measure(df, opto_rs, non_opto_rs, measure, avg_type):

@@ -116,7 +116,7 @@ def build_dfs(date, data_type):
    
     # Perform quad whisk analysis
 
-    pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1  = whisk.dual_whisk_quad_analysis(pw_ID, quad_whisk_1, quad_whisk_2, w1_avg_response, w2_avg_response)
+    pw_quad_trial_counts, aw_quad_trial_counts, pw_1_latency, aw_1_latency, pw_quad_1, pw_quad_2, pw_quad_3, pw_quad_4, aw_quad_1, aw_quad_2, aw_quad_3, aw_quad_4, pw_ratio_2_1, pw_ratio_4_1, aw_ratio_2_1, aw_ratio_4_1, pw_total, aw_total  = whisk.dual_whisk_quad_analysis(pw_ID, quad_whisk_1, quad_whisk_2, w1_avg_response, w2_avg_response)
 
    
     ## calculate CSD profile from electrode depths
@@ -144,85 +144,85 @@ def build_dfs(date, data_type):
     pw_peak_latency, aw_peak_latency = whisk.compute_peak_latency(pw_trial_counts, aw_trial_counts)
 
 
-    experiment = 'frequency'
+   #  experiment = 'frequency'
 
-    spikes_1_4 = loadmat(os.path.join(path, date, experiment, 'spikes_1_4'))
-    spikes_2_4 = loadmat(os.path.join(path, date, experiment, 'spikes_2_4'))
+   #  spikes_1_4 = loadmat(os.path.join(path, date, experiment, 'spikes_1_4'))
+   #  spikes_2_4 = loadmat(os.path.join(path, date, experiment, 'spikes_2_4'))
 
-    spikes_1_4 = spikes_1_4['spikes_1_4']
-    spikes_2_4 = spikes_2_4['spikes_2_4']
+   #  spikes_1_4 = spikes_1_4['spikes_1_4']
+   #  spikes_2_4 = spikes_2_4['spikes_2_4']
 
-    spikes_1_8 = loadmat(os.path.join(path, date, experiment, 'spikes_1_8'))
-    spikes_2_8 = loadmat(os.path.join(path, date, experiment, 'spikes_2_8'))
+   #  spikes_1_8 = loadmat(os.path.join(path, date, experiment, 'spikes_1_8'))
+   #  spikes_2_8 = loadmat(os.path.join(path, date, experiment, 'spikes_2_8'))
 
-    spikes_1_8 = spikes_1_8['spikes_1_8']
-    spikes_2_8 = spikes_2_8['spikes_2_8']
+   #  spikes_1_8 = spikes_1_8['spikes_1_8']
+   #  spikes_2_8 = spikes_2_8['spikes_2_8']
 
-    spikes_1_16 = loadmat(os.path.join(path, date, experiment, 'spikes_1_16'))
-    spikes_2_16 = loadmat(os.path.join(path, date, experiment, 'spikes_2_16'))
+   #  spikes_1_16 = loadmat(os.path.join(path, date, experiment, 'spikes_1_16'))
+   #  spikes_2_16 = loadmat(os.path.join(path, date, experiment, 'spikes_2_16'))
 
-    spikes_1_16 = spikes_1_16['spikes_1_16']
-    spikes_2_16 = spikes_2_16['spikes_2_16']
+   #  spikes_1_16 = spikes_1_16['spikes_1_16']
+   #  spikes_2_16 = spikes_2_16['spikes_2_16']
 
-    lfp_1_4 = loadmat(os.path.join(path, date, experiment, 'lfp_1_4'))
-    lfp_2_4 = loadmat(os.path.join(path, date, experiment, 'lfp_2_4'))
+   #  lfp_1_4 = loadmat(os.path.join(path, date, experiment, 'lfp_1_4'))
+   #  lfp_2_4 = loadmat(os.path.join(path, date, experiment, 'lfp_2_4'))
 
-    lfp_1_4 = np.mean(lfp_1_4['lfp_1_4'][8:16],0)
-    lfp_2_4 = np.mean(lfp_2_4['lfp_2_4'][8:16],0)
+   #  lfp_1_4 = np.mean(lfp_1_4['lfp_1_4'][8:16],0)
+   #  lfp_2_4 = np.mean(lfp_2_4['lfp_2_4'][8:16],0)
 
-    lfp_1_8 = loadmat(os.path.join(path, date, experiment, 'lfp_1_8'))
-    lfp_2_8 = loadmat(os.path.join(path, date, experiment, 'lfp_2_8'))
+   #  lfp_1_8 = loadmat(os.path.join(path, date, experiment, 'lfp_1_8'))
+   #  lfp_2_8 = loadmat(os.path.join(path, date, experiment, 'lfp_2_8'))
 
-    lfp_1_8 = np.mean(lfp_1_8['lfp_1_8'][8:16],0)
-    lfp_2_8 = np.mean(lfp_2_8['lfp_2_8'][8:16],0)
+   #  lfp_1_8 = np.mean(lfp_1_8['lfp_1_8'][8:16],0)
+   #  lfp_2_8 = np.mean(lfp_2_8['lfp_2_8'][8:16],0)
 
-    lfp_1_16 = loadmat(os.path.join(path, date, experiment, 'lfp_1_16'))
-    lfp_2_16 = loadmat(os.path.join(path, date, experiment, 'lfp_2_16'))
+   #  lfp_1_16 = loadmat(os.path.join(path, date, experiment, 'lfp_1_16'))
+   #  lfp_2_16 = loadmat(os.path.join(path, date, experiment, 'lfp_2_16'))
 
-    lfp_1_16 = np.mean(lfp_1_16['lfp_1_16'][8:16],0)
-    lfp_2_16 = np.mean(lfp_2_16['lfp_2_16'][8:16],0)
-    #4Hz
+   #  lfp_1_16 = np.mean(lfp_1_16['lfp_1_16'][8:16],0)
+   #  lfp_2_16 = np.mean(lfp_2_16['lfp_2_16'][8:16],0)
+   #  #4Hz
 
-    hilbert_1_real, hilbert_1_imag = whisk.transform_lfp(lfp_1_4, 3, 5)
-    hilbert_2_real, hilbert_2_imag = whisk.transform_lfp(lfp_2_4, 3, 5)
+   #  hilbert_1_real, hilbert_1_imag = whisk.transform_lfp(lfp_1_4, 3, 5)
+   #  hilbert_2_real, hilbert_2_imag = whisk.transform_lfp(lfp_2_4, 3, 5)
 
-    pw_ppc_4, aw_ppc_4 = whisk.whisk_phase(pw_ID, spikes_1_4, hilbert_1_real, hilbert_1_imag, spikes_2_4, hilbert_2_real, hilbert_2_imag)
+   #  pw_ppc_4, aw_ppc_4 = whisk.whisk_phase(pw_ID, spikes_1_4, hilbert_1_real, hilbert_1_imag, spikes_2_4, hilbert_2_real, hilbert_2_imag)
 
-   #8Hz
+   # #8Hz
 
-    hilbert_1_real, hilbert_1_imag = whisk.transform_lfp(lfp_1_8, 7, 9)
-    hilbert_2_real, hilbert_2_imag = whisk.transform_lfp(lfp_2_8, 7, 9)
+   #  hilbert_1_real, hilbert_1_imag = whisk.transform_lfp(lfp_1_8, 7, 9)
+   #  hilbert_2_real, hilbert_2_imag = whisk.transform_lfp(lfp_2_8, 7, 9)
 
-    pw_ppc_8, aw_ppc_8 = whisk.whisk_phase(pw_ID, spikes_1_8, hilbert_1_real, hilbert_1_imag, spikes_2_8, hilbert_2_real, hilbert_2_imag)
+   #  pw_ppc_8, aw_ppc_8 = whisk.whisk_phase(pw_ID, spikes_1_8, hilbert_1_real, hilbert_1_imag, spikes_2_8, hilbert_2_real, hilbert_2_imag)
 
-   #16Hz
+   # #16Hz
 
-    hilbert_1_real, hilbert_1_imag = whisk.transform_lfp(lfp_1_16, 15, 17)
-    hilbert_2_real, hilbert_2_imag = whisk.transform_lfp(lfp_2_16, 15, 17)
+   #  hilbert_1_real, hilbert_1_imag = whisk.transform_lfp(lfp_1_16, 15, 17)
+   #  hilbert_2_real, hilbert_2_imag = whisk.transform_lfp(lfp_2_16, 15, 17)
 
-    pw_ppc_16, aw_ppc_16 = whisk.whisk_phase(pw_ID, spikes_1_16, hilbert_1_real, hilbert_1_imag, spikes_2_16, hilbert_2_real, hilbert_2_imag)
+   #  pw_ppc_16, aw_ppc_16 = whisk.whisk_phase(pw_ID, spikes_1_16, hilbert_1_real, hilbert_1_imag, spikes_2_16, hilbert_2_real, hilbert_2_imag)
 
-    if pw_ID == 1:
+   #  if pw_ID == 1:
 
-       aw_trace_4, aw_train_4, aw_idx_4, fr_aw_4 = whisk.quick_stim_freq(spikes_2_4, 4)
-       pw_trace_4, pw_train_4, pw_idx_4, fr_pw_4 = whisk.quick_stim_freq(spikes_1_4, 4)
+   #     aw_trace_4, aw_train_4, aw_idx_4, fr_aw_4 = whisk.quick_stim_freq(spikes_2_4, 4)
+   #     pw_trace_4, pw_train_4, pw_idx_4, fr_pw_4 = whisk.quick_stim_freq(spikes_1_4, 4)
 
-       aw_trace_8, aw_train_8, aw_idx_8, fr_aw_8 = whisk.quick_stim_freq(spikes_2_8, 8)
-       pw_trace_8, pw_train_8, pw_idx_8, fr_pw_8 = whisk.quick_stim_freq(spikes_1_8, 8)
+   #     aw_trace_8, aw_train_8, aw_idx_8, fr_aw_8 = whisk.quick_stim_freq(spikes_2_8, 8)
+   #     pw_trace_8, pw_train_8, pw_idx_8, fr_pw_8 = whisk.quick_stim_freq(spikes_1_8, 8)
 
-       aw_trace_16, aw_train_16, aw_idx_16, fr_aw_16 = whisk.quick_stim_freq(spikes_2_16, 16)
-       pw_trace_16, pw_train_16, pw_idx_16, fr_pw_16 = whisk.quick_stim_freq(spikes_1_16, 16)
+   #     aw_trace_16, aw_train_16, aw_idx_16, fr_aw_16 = whisk.quick_stim_freq(spikes_2_16, 16)
+   #     pw_trace_16, pw_train_16, pw_idx_16, fr_pw_16 = whisk.quick_stim_freq(spikes_1_16, 16)
 
-    if pw_ID == 2:
+   #  if pw_ID == 2:
 
-       aw_trace_4, aw_train_4, aw_idx_4, fr_aw_4  = whisk.quick_stim_freq(spikes_1_4, 4)
-       pw_trace_4, pw_train_4, pw_idx_4, fr_pw_4 = whisk.quick_stim_freq(spikes_2_4, 4)
+   #     aw_trace_4, aw_train_4, aw_idx_4, fr_aw_4  = whisk.quick_stim_freq(spikes_1_4, 4)
+   #     pw_trace_4, pw_train_4, pw_idx_4, fr_pw_4 = whisk.quick_stim_freq(spikes_2_4, 4)
 
-       aw_trace_8, aw_train_8, aw_idx_8, fr_aw_8 = whisk.quick_stim_freq(spikes_1_8, 8)
-       pw_trace_8, pw_train_8, pw_idx_8, fr_pw_8 = whisk.quick_stim_freq(spikes_2_8, 8)
+   #     aw_trace_8, aw_train_8, aw_idx_8, fr_aw_8 = whisk.quick_stim_freq(spikes_1_8, 8)
+   #     pw_trace_8, pw_train_8, pw_idx_8, fr_pw_8 = whisk.quick_stim_freq(spikes_2_8, 8)
 
-       aw_trace_16, aw_train_16, aw_idx_16, fr_aw_16 = whisk.quick_stim_freq(spikes_1_16, 16)
-       pw_trace_16, pw_train_16, pw_idx_16, fr_pw_16 = whisk.quick_stim_freq(spikes_2_16, 16)
+   #     aw_trace_16, aw_train_16, aw_idx_16, fr_aw_16 = whisk.quick_stim_freq(spikes_1_16, 16)
+   #     pw_trace_16, pw_train_16, pw_idx_16, fr_pw_16 = whisk.quick_stim_freq(spikes_2_16, 16)
 #build dataframe
 
     data = {'date': dates, 'label': labels, 'depths': unit_depths, 'rs': rs_units, 'fs': fs_units, 
@@ -237,11 +237,13 @@ def build_dfs(date, data_type):
            'opto_spont': opto_spont, 'pw_trial_counts':pw_trial_counts, 'aw_trial_counts': aw_trial_counts, 
            'pw_quad_trial_counts': pw_quad_trial_counts, 'aw_quad_trial_counts': aw_quad_trial_counts, 'opto_trial_counts': opto_trial_counts,
            'autocorr': w1_autocorr.tolist(), 'tau': w1_tau.tolist(), 'fit': w1_fit.tolist(), 'pw_peak_latency': pw_peak_latency, 'aw_peak_latency': aw_peak_latency,
-           'aw_trace_4': aw_trace_4, 'aw_train_4': aw_train_4, 'aw_idx_4': aw_idx_4, 'pw_trace_4': pw_trace_4, 'pw_train_4': pw_train_4, 'pw_idx_4': pw_idx_4, 
-           'aw_trace_8': aw_trace_8, 'aw_train_8': aw_train_8, 'aw_idx_8': aw_idx_8, 'pw_trace_8': pw_trace_8, 'pw_train_8': pw_train_8, 'pw_idx_8': pw_idx_8,
-           'aw_trace_16': aw_trace_16, 'aw_train_16': aw_train_16, 'aw_idx_16': aw_idx_16, 'pw_trace_16': pw_trace_16, 'pw_train_16': pw_train_16, 'pw_idx_16': pw_idx_16,
-           'fr_aw_4': fr_aw_4, 'fr_pw_4': fr_pw_4, 'fr_aw_8': fr_aw_8, 'fr_pw_8': fr_pw_8, 'fr_aw_16': fr_aw_16, 'fr_pw_16': fr_pw_16,
-           'pw_ppc_4': pw_ppc_4, 'aw_ppc_4': aw_ppc_4, 'pw_ppc_8': pw_ppc_8, 'aw_ppc_8': aw_ppc_8, 'pw_ppc_16': pw_ppc_16, 'aw_ppc_16': aw_ppc_16}
+           'pw_total': pw_total, 'aw_total': aw_total}
+
+         #   'aw_trace_4': aw_trace_4, 'aw_train_4': aw_train_4, 'aw_idx_4': aw_idx_4, 'pw_trace_4': pw_trace_4, 'pw_train_4': pw_train_4, 'pw_idx_4': pw_idx_4, 
+         #   'aw_trace_8': aw_trace_8, 'aw_train_8': aw_train_8, 'aw_idx_8': aw_idx_8, 'pw_trace_8': pw_trace_8, 'pw_train_8': pw_train_8, 'pw_idx_8': pw_idx_8,
+         #   'aw_trace_16': aw_trace_16, 'aw_train_16': aw_train_16, 'aw_idx_16': aw_idx_16, 'pw_trace_16': pw_trace_16, 'pw_train_16': pw_train_16, 'pw_idx_16': pw_idx_16,
+         #   'fr_aw_4': fr_aw_4, 'fr_pw_4': fr_pw_4, 'fr_aw_8': fr_aw_8, 'fr_pw_8': fr_pw_8, 'fr_aw_16': fr_aw_16, 'fr_pw_16': fr_pw_16,
+         #   'pw_ppc_4': pw_ppc_4, 'aw_ppc_4': aw_ppc_4, 'pw_ppc_8': pw_ppc_8, 'aw_ppc_8': aw_ppc_8, 'pw_ppc_16': pw_ppc_16, 'aw_ppc_16': aw_ppc_16}
 
 
     import pandas as pd
