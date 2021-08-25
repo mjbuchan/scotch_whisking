@@ -80,7 +80,7 @@ def build_dfs(date, data_type):
 
     # perform optotagging
 
-    opto_trial_counts, opto_resp_perc, opto_tag, opto_bin_responses, opto_latency, opto_spont = up.perform_opto_tag(opto_tag_10, 3000, 20, 3, 50)
+    opto_trial_counts, opto_resp_perc, opto_tag, opto_bin_responses, opto_latency, opto_spont, opto_jitter = up.perform_opto_tag(opto_tag_10, 3000, 20, 3, 50)
 
     #print('optotag complete')
 
@@ -131,15 +131,17 @@ def build_dfs(date, data_type):
 
     l4_top, l4_bottom, l4, l23_top, l23_bottom, l23 = up.calculate_l4(csd, unit_depths, date, 'spec')
 
-    time = np.arange(0,25,1)
+    time = np.arange(0,300,1)
 
     if pw_ID == 1: 
 
-       w1_autocorr, w1_tau, w1_fit = whisk.intrinsic_timescale(single_whisk_1, time)
+       w1_autocorr, w1_tau, w1_fit = whisk.intrinsic_timescale(quad_whisk_1, time)
     
     if pw_ID == 2:
 
-       w1_autocorr, w1_tau, w1_fit = whisk.intrinsic_timescale(single_whisk_2, time)
+       w1_autocorr, w1_tau, w1_fit = whisk.intrinsic_timescale(quad_whisk_2, time)
+
+
 
     pw_peak_latency, aw_peak_latency = whisk.compute_peak_latency(pw_trial_counts, aw_trial_counts)
 
@@ -237,7 +239,7 @@ def build_dfs(date, data_type):
            'opto_spont': opto_spont, 'pw_trial_counts':pw_trial_counts, 'aw_trial_counts': aw_trial_counts, 
            'pw_quad_trial_counts': pw_quad_trial_counts, 'aw_quad_trial_counts': aw_quad_trial_counts, 'opto_trial_counts': opto_trial_counts,
            'autocorr': w1_autocorr.tolist(), 'tau': w1_tau.tolist(), 'fit': w1_fit.tolist(), 'pw_peak_latency': pw_peak_latency, 'aw_peak_latency': aw_peak_latency,
-           'pw_total': pw_total, 'aw_total': aw_total}
+           'pw_total': pw_total, 'aw_total': aw_total, 'opto_jitter': opto_jitter}
 
          #   'aw_trace_4': aw_trace_4, 'aw_train_4': aw_train_4, 'aw_idx_4': aw_idx_4, 'pw_trace_4': pw_trace_4, 'pw_train_4': pw_train_4, 'pw_idx_4': pw_idx_4, 
          #   'aw_trace_8': aw_trace_8, 'aw_train_8': aw_train_8, 'aw_idx_8': aw_idx_8, 'pw_trace_8': pw_trace_8, 'pw_train_8': pw_train_8, 'pw_idx_8': pw_idx_8,

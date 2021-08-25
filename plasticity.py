@@ -6,6 +6,7 @@ def plasticity_pre_post(data_pre, data_post):
 
     pre_resp = []
     pre_trace = []
+    pre_spont = []
 
     for neuron in data_pre:
 
@@ -20,15 +21,21 @@ def plasticity_pre_post(data_pre, data_post):
         
         pre_trace.append(np.mean(hist,0))
 
+        pre_spont.append(spont)
+
     pre_resp = np.mean(pre_resp,0)
     
     pre_trace_sem = st.sem(pre_trace,0)
     pre_trace = np.mean(pre_trace,0)
     
+    pre_spont = np.mean(pre_spont,0)
+    
+    
 
 
     post_resp = []
     post_trace = []
+    post_spont = []
 
     for neuron in data_post:
 
@@ -43,12 +50,16 @@ def plasticity_pre_post(data_pre, data_post):
         
         post_trace.append(np.mean(hist,0))
 
+        post_spont.append(spont)
+
     post_resp = np.mean(post_resp,0)
 
     mean_pre_resp = np.mean(pre_resp)
     std_pre_resp = np.std(pre_resp)
     
     mean_post_resp = np.mean(post_resp)
+
+    post_spont = np.mean(post_spont,0)
 
     pre_resp = (pre_resp-mean_pre_resp)/std_pre_resp
     post_resp = (post_resp-mean_pre_resp)/std_pre_resp
@@ -57,7 +68,7 @@ def plasticity_pre_post(data_pre, data_post):
     post_trace = np.mean(post_trace,0)
     
 
-    return pre_resp, post_resp, pre_trace, post_trace, mean_pre_resp, mean_post_resp, pre_trace_sem, post_trace_sem
+    return pre_resp, post_resp, pre_trace, post_trace, mean_pre_resp, mean_post_resp, pre_trace_sem, post_trace_sem, pre_spont, post_spont
 
 
 def plasticity_preprocess(path):
@@ -96,7 +107,7 @@ def plasticity_preprocess(path):
             post_mua = loadmat(os.path.join(path,date,'post/mua_spikes.mat'))
             post_mua = post_mua['mua_spikes']
 
-            pre_resp, post_resp, pre_trace, post_trace, mean_pre_resp, mean_post_resp, pre_trace_sem, post_trace_sem = pp.plasticity_pre_post(pre_mua[0:8], post_mua[0:8])
+            pre_resp, post_resp, pre_trace, post_trace, mean_pre_resp, mean_post_resp, pre_spont, post_spont = pp.plasticity_pre_post(pre_mua[0:8], post_mua[0:8])
 
             avg_pre.append(pre_resp)
             avg_post.append(post_resp)
@@ -119,7 +130,7 @@ def plasticity_preprocess(path):
     res_post = np.mean(np.array(np.nanmean(avg_post,0)).reshape(-1, 4), axis=1)
     std_res_post = st.sem(np.array(np.nanmean(avg_post,0)).reshape(-1, 4), axis=1)
 
-    return avg_pre, avg_post, avg_pre_mua, avg_post_mua, avg_pre_trace, avg_post_trace, data, data_delta, res_pre, res_post, std_res_pre, std_res_post
+    return avg_pre, avg_post, avg_pre_mua, avg_post_mua, avg_pre_trace, avg_post_trace, data, data_delta, res_pre, res_post, std_res_pre, std_res_post, pre_spont, post_spont
 
 
 def plot_pre_post_trace(avg_pre_trace, avg_post_trace, condition):
@@ -135,7 +146,11 @@ def plot_pre_post_trace(avg_pre_trace, avg_post_trace, condition):
         
     if condition == 'lhx2':
         
-        palette = ['grey', 'rebeccapurple']
+        palette = ['grey', 'deeppink']
+    
+    if condition == 'lhx2_flox':
+
+        palette = ['grey', 'royalblue']
 
     pre_trace = np.mean(avg_pre_trace,0)
     post_trace = np.mean(avg_post_trace,0)
@@ -151,20 +166,20 @@ def plot_pre_post_trace(avg_pre_trace, avg_post_trace, condition):
     plotting_pre_sem = nd.gaussian_filter(np.array(pre_trace_sem),1)[950:1250]/0.001
     plotting_post_sem = nd.gaussian_filter(np.array(post_trace_sem),1)[950:1250]/0.001
 
-    plt.plot(np.arange(-50, 250, 1), plotting_pre, color = palette[0], linewidth = 2)
-    plt.plot(np.arange(-50, 250, 1), plotting_post, color = palette[1], linewidth = 2)
+    plt.plot(np.arange(-50, 250, 1), plotting_pre, color = palette[0], linewidth = 1)
+    plt.plot(np.arange(-50, 250, 1), plotting_post, color = palette[1], linewidth = 1)
 
-    plt.fill_between(np.arange(-50, 250, 1), plotting_pre - 2*plotting_pre_sem, plotting_pre + 2*plotting_pre_sem, color = palette[0], alpha = 0.2)
-    plt.fill_between(np.arange(-50, 250, 1), plotting_post - 2*plotting_post_sem, plotting_post + 2*plotting_post_sem, color = palette[1], alpha = 0.2)
+    plt.fill_between(np.arange(-50, 250, 1), plotting_pre - plotting_pre_sem, plotting_pre + plotting_pre_sem, color = palette[0], alpha = 0.2)
+    plt.fill_between(np.arange(-50, 250, 1), plotting_post - plotting_post_sem, plotting_post + plotting_post_sem, color = palette[1], alpha = 0.2)
 
     plt.xlabel('Time (ms)')
-    plt.ylabel('Spike rate (Hz)')
+    plt.ylabel('L2/3 spike\nrate (Hz)')
 
-    plt.text(130,900, 'Pre', color = palette[0])
-    plt.text(130,700, 'Post', color = palette[1])
+    plt.text(130,700, 'Pre', color = palette[0])
+    plt.text(130,550, 'Post', color = palette[1])
 
     plt.xlim(-50, 250)
-    plt.ylim(0,1200)
+    plt.ylim(0,750)
 
 def plot_pre_post_resp(res_pre, res_post, std_res_pre, std_res_post, condition):
     
@@ -177,16 +192,20 @@ def plot_pre_post_resp(res_pre, res_post, std_res_pre, std_res_post, condition):
         
     if condition == 'lhx2':
         
-        palette = ['grey', 'rebeccapurple']
+        palette = ['grey', 'deeppink']
+
+    if condition == 'lhx2_flox':
+
+        palette = ['grey', 'royalblue']
         
 
-    plt.figure(figsize = (3,3))
+    plt.figure(figsize = (2.25,2.25))
 
     ax = plt.scatter(np.arange(-1000/60,0,(1000/60)/25),res_pre, color = palette[1], s = 12)
     ax = plt.scatter(np.arange(60/60,1060/60,(1000/60)/25),res_post, color = palette[1], s = 12)
 
-    ax = plt.fill_between(np.arange(-1000/60,0,(1000/60)/25), res_pre - 2*std_res_pre, res_pre+2*std_res_pre, alpha = 0.2, color = palette[1])
-    ax = plt.fill_between(np.arange(60/60,1060/60,(1000/60)/25), res_post - 2*std_res_post, res_post+2*std_res_post, alpha = 0.2, color = palette[1])
+    ax = plt.fill_between(np.arange(-1000/60,0,(1000/60)/25), res_pre - std_res_pre, res_pre+std_res_pre, alpha = 0.2, color = palette[1])
+    ax = plt.fill_between(np.arange(60/60,1060/60,(1000/60)/25), res_post - std_res_post, res_post+std_res_post, alpha = 0.2, color = palette[1])
 
     plt.xlim(-17,17)
     plt.ylim(-2,6)
@@ -194,15 +213,16 @@ def plot_pre_post_resp(res_pre, res_post, std_res_pre, std_res_post, condition):
     plt.hlines(0, -1000/60, 1000/60, ls = ':', color = 'black')
     plt.vlines(0.2, -2, 6, color = 'black', linewidth = 3, alpha = 0.2)
 
-    plt.text(-7, -1.5, 'RWS', color = 'black')
+  #plt.text(-7, -1.5, 'RWS', color = 'black')
 
     plt.xlabel('Time (min)')
-    plt.ylabel('Normalised spike rate')
+    plt.ylabel('Normalised\nL2/3 spike rate')
 
     if condition == 'lhx2':
-        plt.text(-10,4, 'WT', color = 'limegreen')
-        plt.text(-10,3,'Lhx2+', color = 'rebeccapurple')
+        plt.text(-15,5, 'WT', color = 'limegreen')
+        plt.text(-15,3.5,'Lhx2+', color = 'deeppink')
 
+        plt.text(-15, 1, 'RWS', color = 'black')
 def plot_pre_post_paired(data, condition):  
 
     import numpy as np
@@ -219,7 +239,12 @@ def plot_pre_post_paired(data, condition):
         
     if condition == 'lhx2':
         
-        palette = ['grey', 'rebeccapurple']
+        palette = ['grey', 'deeppink']
+
+    if condition == 'lhx2_flox':
+
+        palette = ['grey', 'royalblue']
+
 
     ax = sns.stripplot(data = data, jitter=0,color = 'black', palette = palette, zorder = 1)
     ax = sns.barplot(data=data, facecolor = 'white', edgecolor = 'black', zorder = 0, ci = None)
@@ -228,7 +253,7 @@ def plot_pre_post_paired(data, condition):
 
         plt.plot((0, 1), (data[0][points], data[1][points]), color = 'black', linewidth = 0.2)
 
-    ax.set_xticklabels(['pre', 'post'], rotation = 0)
+    ax.set_xticklabels(['Pre', 'Post'], rotation = 0)
 
     plt.xlim(-.75, 1.75)
 
@@ -238,14 +263,16 @@ def plot_pre_post_paired(data, condition):
     ax.spines['top'].set_visible(False)
 
     print(st.ttest_rel(data[0], data[1]))
+    print(np.mean(data[0]), st.sem(data[0]))
+    print(np.mean(data[1]), st.sem(data[1]))
 
-    plt.ylabel('Spike rate (Hz)')
+    plt.ylabel('L2/3 spike\nrate (Hz)')
 
     # plt.hlines(np.mean(data[0]), -.1,0.1, color = 'black')
     # plt.hlines(np.mean(data[1]), .9,1.1, color = 'black')
 
-    plt.vlines(0, np.mean(data[0])-st.sem(data[0]), np.mean(data[0])+st.sem(data[0]), color = 'black')
-    plt.vlines(1, np.mean(data[1])-st.sem(data[1]), np.mean(data[1])+st.sem(data[1]), color = 'black')
+    plt.vlines(0, np.mean(data[0])-st.sem(data[0]), np.mean(data[0])+st.sem(data[0]), color = 'black', linewidth = 1)
+    plt.vlines(1, np.mean(data[1])-st.sem(data[1]), np.mean(data[1])+st.sem(data[1]), color = 'black', linewidth = 1)
 
     if condition == 'chr2':
 
@@ -267,16 +294,18 @@ def plot_single_example(pre_resp, post_resp, condition):
         
     if condition == 'lhx2':
         
-        palette = ['grey', 'rebeccapurple']
+        palette = ['grey', 'deeppink']
 
     plt.scatter(np.arange(-1000/60,0,(1000/60)/100), pre_resp, label = 'pre', s =12, color = palette[1])
     plt.scatter(np.arange(60/60,1060/60,(1000/60)/100), post_resp, label = 'post', s = 12, color = palette[1])
 
     plt.xlabel('Time (min)')
-    plt.ylabel('Normalised \nspike rate')
+    plt.ylabel('Normalised\nL2/3 spike rate')
     
     plt.xlim(-18, 18)
     plt.ylim(-4, 6)
+
+    plt.yticks([-3, 0, 3, 6])
     
     plt.hlines(np.mean(pre_resp,0), -1000/60, 1000/60, ls = ':', color = 'black')
     plt.vlines(0.3, -50, 150, color = 'black', linewidth = 3, alpha = 0.2)
@@ -289,27 +318,37 @@ def plot_single_traces(pre_trace, post_trace, condition):
     import numpy as np
     import matplotlib.pyplot as plt
     import scipy.ndimage as nd
+
+    pre_trace = nd.gaussian_filter(pre_trace,2)
+    post_trace = nd.gaussian_filter(post_trace,2)
+
+    post_trace = post_trace/max(pre_trace)
+    pre_trace = pre_trace/max(pre_trace)
     
+
     if condition == 'chr2':
     
         palette = ['grey', 'limegreen']
         
     if condition == 'lhx2':
         
-        palette = ['grey', 'rebeccapurple']
+        palette = ['grey', 'deeppink']
     
     plt.figure(figsize = (1.5,1.5))
 
-    plt.plot(np.arange(-50,250,1), (nd.gaussian_filter(pre_trace/0.001,2)[950:1250]-np.mean(pre_trace,0)), color = palette[0], linewidth = 2)
-    plt.plot(np.arange(-50,250,1), (nd.gaussian_filter(post_trace/0.001,2)[950:1250]-np.mean(post_trace,0)), color = palette[1], linewidth = 2)
+    # plt.plot(np.arange(-50,250,1), (nd.gaussian_filter(pre_trace,2)[950:1250]-np.mean(pre_trace,0)), color = palette[0], linewidth = 1)
+    # plt.plot(np.arange(-50,250,1), (nd.gaussian_filter(post_trace,2)[950:1250]-np.mean(post_trace, 0)), color = palette[1], linewidth = 1)
+
+    plt.plot(np.arange(-50,250,1), (pre_trace[950:1250]), color = palette[0], linewidth = 1)
+    plt.plot(np.arange(-50,250,1), (post_trace[950:1250]), color = palette[1], linewidth = 1)
 
     plt.xlabel('Time (ms)')
-    plt.ylabel('Spike Rate (Hz)')
+    plt.ylabel('Normalised\nL2/3 spike rate')
 
-    plt.ylim(0,1200)
+    plt.ylim(0,3)
 
-    plt.text(130, 900, 'Pre', color = palette[0])
-    plt.text(130, 700, 'Post', color = palette[1])
+    plt.text(130, 2.7, 'Pre', color = palette[0])
+    plt.text(130, 2.1, 'Post', color = palette[1])
 
 def generate_single_example(date, condition):
 

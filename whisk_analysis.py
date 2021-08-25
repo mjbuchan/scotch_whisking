@@ -1465,17 +1465,23 @@ def intrinsic_timescale(data, time):
     import numpy as np
     
 
-    w_autocorr = np.zeros((len(data), 25))
+    w_autocorr = np.zeros((len(data), 300))
 
     w_tau = np.zeros((len(data)))
 
-    w_fit = np.zeros((len(data), 25))
+    w_fit = np.zeros((len(data), 300))
 
     for counter, neuron in enumerate(data):
     
         hist = [np.histogram(trial, 300, range = (0,3))[0] for trial in neuron]
-    
-        corr = [autocorr(trial[100:125]) for trial in hist]
+
+        check = np.array([np.sum(i) for i in hist])
+
+        hist = np.array(hist)[check > 10]
+
+        hist = np.mean(hist,0)
+
+        corr = [autocorr(hist)]
 
         w_autocorr[counter] = np.nanmean(corr,0)
 

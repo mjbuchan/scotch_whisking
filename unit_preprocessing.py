@@ -374,6 +374,7 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
                 
                 '''
     import numpy as np
+    import scipy.stats as st
 
     opto_trial_counts = []
     opto_resp_perc = []
@@ -381,6 +382,7 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
     opto_spont = []
 
     opto_lat_list = []
+    opto_jitter = []
 
     for neuron in range(len(data)):
 
@@ -434,13 +436,14 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
         opto_spont.append(np.array(unit_spont))
 
         if np.array(unit_latency).sum() > 0: 
-
+            opto_jitter.append(st.sem(unit_latency))
             opto_latency.append(np.median(unit_latency,0))
            # opto_latency.append(min(unit_latency))
 
         else: 
 
             opto_latency.append(float('Nan'))
+            opto_jitter.append(float('Nan'))
 
 
 
@@ -451,7 +454,7 @@ def perform_opto_tag(data, no_bins, resp_window, trial_length, response_bin):
     
     opto_tag = ((np.asarray(opto_resp_perc) >= 15) | (np.asarray(opto_bin_responses) >= 1))
 
-    return opto_trial_counts, opto_resp_perc, opto_tag, opto_bin_responses, opto_latency, opto_spont
+    return opto_trial_counts, opto_resp_perc, opto_tag, opto_bin_responses, opto_latency, opto_spont, opto_jitter
 
 
 def split_units(opto_tag, rs_units, fs_units):
