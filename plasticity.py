@@ -107,7 +107,7 @@ def plasticity_preprocess(path):
             post_mua = loadmat(os.path.join(path,date,'post/mua_spikes.mat'))
             post_mua = post_mua['mua_spikes']
 
-            pre_resp, post_resp, pre_trace, post_trace, mean_pre_resp, mean_post_resp, pre_spont, post_spont = pp.plasticity_pre_post(pre_mua[0:8], post_mua[0:8])
+            pre_resp, post_resp, pre_trace, post_trace, mean_pre_resp, mean_post_resp, pre_trace_sem, post_trace_sem, pre_spont, post_spont = pp.plasticity_pre_post(pre_mua[0:8], post_mua[0:8])
 
             avg_pre.append(pre_resp)
             avg_post.append(post_resp)
