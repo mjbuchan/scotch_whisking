@@ -91,6 +91,9 @@ def plasticity_preprocess(path):
     avg_pre_trace = []
     avg_post_trace = []
 
+    avg_pre_spont = []
+    avg_post_spont = []
+
     for date in os.listdir(path): 
 
         if os.path.isdir(os.path.join(path, date)):
@@ -120,6 +123,9 @@ def plasticity_preprocess(path):
 
             avg_pre_trace.append(pre_trace)
             avg_post_trace.append(post_trace)
+
+            avg_pre_spont.append(np.mean(pre_spont))
+            avg_post_spont.append(np.mean(post_spont))
             
     data = [np.array(avg_pre_raw)/0.25, np.array(avg_post_raw)/0.25]
     data_delta = (np.array(avg_post_raw)/np.array(avg_pre_raw))*100
@@ -130,7 +136,7 @@ def plasticity_preprocess(path):
     res_post = np.mean(np.array(np.nanmean(avg_post,0)).reshape(-1, 4), axis=1)
     std_res_post = st.sem(np.array(np.nanmean(avg_post,0)).reshape(-1, 4), axis=1)
 
-    return avg_pre, avg_post, avg_pre_mua, avg_post_mua, avg_pre_trace, avg_post_trace, data, data_delta, res_pre, res_post, std_res_pre, std_res_post, pre_spont, post_spont
+    return avg_pre, avg_post, avg_pre_mua, avg_post_mua, avg_pre_trace, avg_post_trace, data, data_delta, res_pre, res_post, std_res_pre, std_res_post, avg_pre_spont, avg_post_spont
 
 
 def plot_pre_post_trace(avg_pre_trace, avg_post_trace, condition):
