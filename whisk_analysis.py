@@ -1520,10 +1520,19 @@ def compute_intrinsic_tau(x_data, y_data):
     from scipy.optimize import curve_fit
     import numpy as np
     
-    y_data = autocorr(y_data)
+    #y_data = autocorr(y_data)
     pars, cov = curve_fit(f=exponential, xdata=x_data, ydata=y_data, p0=[0, 0], bounds=(-np.inf, np.inf))
+    pars[1] = pars[1]
     exp = exponential(x_data, *pars)
-    tau = -1/pars[1]
+    tau = (-1/pars[1])
+    
+    if tau > 80:
+
+         tau=tau
+
+    else:
+
+        tau = float('Nan')
 
     return tau, exp
 

@@ -141,7 +141,13 @@ def build_dfs(date, data_type):
 
        w1_autocorr, w1_tau, w1_fit = whisk.intrinsic_timescale(quad_whisk_2, time)
 
+    if pw_ID == 1: 
 
+       w2_autocorr, w2_tau, w2_fit = whisk.intrinsic_timescale(quad_whisk_2, time)
+    
+    if pw_ID == 2:
+
+       w2_autocorr, w2_tau, w2_fit = whisk.intrinsic_timescale(quad_whisk_1, time)
 
     pw_peak_latency, aw_peak_latency = whisk.compute_peak_latency(pw_trial_counts, aw_trial_counts)
 
@@ -238,7 +244,7 @@ def build_dfs(date, data_type):
            'stpr_1st': stpr_1st_half, 'stpr_2nd': stpr_2nd_half, 'entropy': unit_entropy, 'opto_latency': opto_latency,
            'opto_spont': opto_spont, 'pw_trial_counts':pw_trial_counts, 'aw_trial_counts': aw_trial_counts, 
            'pw_quad_trial_counts': pw_quad_trial_counts, 'aw_quad_trial_counts': aw_quad_trial_counts, 'opto_trial_counts': opto_trial_counts,
-           'autocorr': w1_autocorr.tolist(), 'tau': w1_tau.tolist(), 'fit': w1_fit.tolist(), 'pw_peak_latency': pw_peak_latency, 'aw_peak_latency': aw_peak_latency,
+           'w1_autocorr': w1_autocorr.tolist(), 'w1_tau': w1_tau.tolist(), 'w1_fit': w1_fit.tolist(), 'w2_autocorr': w2_autocorr.tolist(), 'w2_tau': w2_tau.tolist(), 'w2_fit': w2_fit.tolist(),'pw_peak_latency': pw_peak_latency, 'aw_peak_latency': aw_peak_latency,
            'pw_total': pw_total, 'aw_total': aw_total, 'opto_jitter': opto_jitter}
 
          #   'aw_trace_4': aw_trace_4, 'aw_train_4': aw_train_4, 'aw_idx_4': aw_idx_4, 'pw_trace_4': pw_trace_4, 'pw_train_4': pw_train_4, 'pw_idx_4': pw_idx_4, 

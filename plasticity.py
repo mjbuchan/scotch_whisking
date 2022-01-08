@@ -302,6 +302,10 @@ def plot_single_example(pre_resp, post_resp, condition):
         
         palette = ['grey', 'deeppink']
 
+    if condition == 'lhx2_flox':
+        
+        palette = ['grey', 'royalblue']
+
     plt.scatter(np.arange(-1000/60,0,(1000/60)/100), pre_resp, label = 'pre', s =12, color = palette[1])
     plt.scatter(np.arange(60/60,1060/60,(1000/60)/100), post_resp, label = 'post', s = 12, color = palette[1])
 
@@ -339,6 +343,10 @@ def plot_single_traces(pre_trace, post_trace, condition):
     if condition == 'lhx2':
         
         palette = ['grey', 'deeppink']
+
+    if condition == 'lhx2_flox':
+        
+        palette = ['grey', 'royalblue']
     
     plt.figure(figsize = (1.5,1.5))
 
