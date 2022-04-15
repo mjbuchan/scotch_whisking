@@ -156,7 +156,7 @@ def plot_pre_post_trace(avg_pre_trace, avg_post_trace, condition):
     
     if condition == 'lhx2_flox':
 
-        palette = ['grey', 'royalblue']
+        palette = ['grey', 'rebeccapurple']
 
     pre_trace = np.mean(avg_pre_trace,0)
     post_trace = np.mean(avg_post_trace,0)
@@ -202,10 +202,13 @@ def plot_pre_post_resp(res_pre, res_post, std_res_pre, std_res_post, condition):
 
     if condition == 'lhx2_flox':
 
-        palette = ['grey', 'royalblue']
+        palette = ['grey', 'rebeccapurple']
         
+    if condition == 'control':
 
-    plt.figure(figsize = (2.25,2.25))
+        palette = ['grey', 'grey']    
+
+    plt.figure(figsize = (1.5,1.5))
 
     ax = plt.scatter(np.arange(-1000/60,0,(1000/60)/25),res_pre, color = palette[1], s = 12)
     ax = plt.scatter(np.arange(60/60,1060/60,(1000/60)/25),res_post, color = palette[1], s = 12)
@@ -249,7 +252,7 @@ def plot_pre_post_paired(data, condition):
 
     if condition == 'lhx2_flox':
 
-        palette = ['grey', 'royalblue']
+        palette = ['grey', 'rebeccapurple']
 
 
     ax = sns.stripplot(data = data, jitter=0,color = 'black', palette = palette, zorder = 1)
@@ -268,6 +271,7 @@ def plot_pre_post_paired(data, condition):
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
 
+    #print(st.shapiro(data[0]))
     print(st.ttest_rel(data[0], data[1]))
     print(np.mean(data[0]), st.sem(data[0]))
     print(np.mean(data[1]), st.sem(data[1]))
@@ -304,7 +308,7 @@ def plot_single_example(pre_resp, post_resp, condition):
 
     if condition == 'lhx2_flox':
         
-        palette = ['grey', 'royalblue']
+        palette = ['grey', 'rebeccapurple']
 
     plt.scatter(np.arange(-1000/60,0,(1000/60)/100), pre_resp, label = 'pre', s =12, color = palette[1])
     plt.scatter(np.arange(60/60,1060/60,(1000/60)/100), post_resp, label = 'post', s = 12, color = palette[1])
@@ -346,7 +350,7 @@ def plot_single_traces(pre_trace, post_trace, condition):
 
     if condition == 'lhx2_flox':
         
-        palette = ['grey', 'royalblue']
+        palette = ['grey', 'rebeccapurple']
     
     plt.figure(figsize = (1.5,1.5))
 

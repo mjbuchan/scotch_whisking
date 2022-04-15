@@ -60,7 +60,7 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
 
         if np.array(unit_latency).sum() > 0: 
 
-            w1_latency.append(np.nanmean(unit_latency,0))
+            w1_latency.append(np.min(unit_latency,0))
 
         else: 
 
@@ -112,7 +112,7 @@ def dual_whisk_single_analysis(whisk_1, whisk_2):
         
         if np.array(unit_latency).sum() > 0: 
 
-            w2_latency.append(np.nanmean(unit_latency,0))
+            w2_latency.append(np.min(unit_latency,0))
 
         else: 
 
@@ -235,7 +235,7 @@ def dual_whisk_quad_analysis(pw_ID, whisk_1, whisk_2, w1_avg_response, w2_avg_re
         
         if np.array(unit_latency).sum() > 0: 
 
-            w1_latency.append(np.nanmean(unit_latency,0))
+            w1_latency.append(np.min(unit_latency,0))
 
         else: 
 
@@ -284,7 +284,7 @@ def dual_whisk_quad_analysis(pw_ID, whisk_1, whisk_2, w1_avg_response, w2_avg_re
         
         if np.array(unit_latency).sum() > 0: 
 
-            w2_latency.append(np.nanmean(unit_latency,0))
+            w2_latency.append(np.min(unit_latency,0))
 
         else: 
 
@@ -1465,15 +1465,29 @@ def intrinsic_timescale(data, time):
     import numpy as np
     
 
-    w_autocorr = np.zeros((len(data), 300))
+    w_autocorr = np.zeros((len(data), 250))
 
     w_tau = np.zeros((len(data)))
 
-    w_fit = np.zeros((len(data), 300))
+    w_fit = np.zeros((len(data), 250))
+
+    # for counter, neuron in enumerate(data):
+    
+    #     hist = [np.histogram(trial, 3000, range = (0,3))[0] for trial in neuron]
+
+    #     check = np.array([np.sum(i) for i in hist])
+
+    #     hist = np.array(hist)[check > 10]
+
+    #     hist = np.mean(hist,0)
+
+    #     corr = [autocorr(hist)]
+
+    #     w_autocorr[counter] = np.nanmean(corr,0)
 
     for counter, neuron in enumerate(data):
     
-        hist = [np.histogram(trial, 300, range = (0,3))[0] for trial in neuron]
+        hist = [np.histogram(trial, 250, range = (1,1.25))[0] for trial in neuron]
 
         check = np.array([np.sum(i) for i in hist])
 
@@ -1490,8 +1504,8 @@ def intrinsic_timescale(data, time):
     
         if neuron.sum() > 0:
         
-            w_tau[counter] = compute_intrinsic_tau(time, neuron)[0]
-            w_fit[counter] = compute_intrinsic_tau(time, neuron)[1]
+            w_tau[counter] = compute_intrinsic_tau(time[:250], neuron)[0]
+            w_fit[counter] = compute_intrinsic_tau(time[:250], neuron)[1]
         
         else: 
         
@@ -1510,29 +1524,23 @@ def autocorr(x):
     result = result / float(result.max())
     return result[result.size // 2:]
 
-def exponential(x, a, b):
-    import numpy as np
+def func(x, a, b, c):
     
-    return a*np.exp(b*x)
+    import numpy as np
+    return a * np.exp(-b * x) + c
 
 def compute_intrinsic_tau(x_data, y_data):
     
     from scipy.optimize import curve_fit
     import numpy as np
     
-    #y_data = autocorr(y_data)
-    pars, cov = curve_fit(f=exponential, xdata=x_data, ydata=y_data, p0=[0, 0], bounds=(-np.inf, np.inf))
-    pars[1] = pars[1]
-    exp = exponential(x_data, *pars)
-    tau = (-1/pars[1])
-    
-    if tau > 80:
+    try:
+        pars, cov = curve_fit(func, xdata=x_data, ydata=y_data, maxfev = 1000)
+    except RuntimeError:
+        pars = [float('nan'),float('nan'),float('nan')]
 
-         tau=tau
-
-    else:
-
-        tau = float('Nan')
+    exp = func(x_data, *pars)
+    tau = (1/pars[1])
 
     return tau, exp
 
@@ -1541,14 +1549,10 @@ def compute_peak_latency(pw_counts, aw_counts):
     import numpy as np
     import scipy.ndimage as nd
 
-    pw_peak_latency = [np.argmax(i[1007:1020])+7 for i in nd.gaussian_filter(pw_counts, sigma = 1)]
-    aw_peak_latency = [np.argmax(i[1007:1020])+7 for i in nd.gaussian_filter(aw_counts, sigma = 1)]
-
-
+    pw_peak_latency = [np.argmax(i[1005:1025])+5 if i[np.argmax(i)] > 0 else float('nan') for i in nd.gaussian_filter(np.array(pw_counts)/0.001, sigma = 1)]
+    aw_peak_latency = [np.argmax(i[1005:1025])+5 if i[np.argmax(i)] > 0 else float('nan') for i in nd.gaussian_filter(np.array(aw_counts)/0.001, sigma = 1)]
 
     return pw_peak_latency, aw_peak_latency
-
-
 
 def butter_bandpass(lowcut, highcut, fs, order=5):
 

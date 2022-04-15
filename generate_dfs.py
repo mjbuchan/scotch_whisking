@@ -99,6 +99,22 @@ def build_dfs(date, data_type):
     [population_strip.append(i) for i in population_stpr]
 
     population_stpr = population_strip
+
+    shuffle_stpr, shuffle_stlfp, shuffle_mua_coupling, shuffle_lfp_coupling, shuffle_1st_half, shuffle_2nd_half = spont.shuffle_coupling(spont_spikes, spont_lfp, spont_mua_spikes, 'single_unit')
+
+    shuffle_strip = []
+
+    [shuffle_strip.append(i) for i in shuffle_stpr]
+
+    new_stpr, new_mua_coupling = spont.mua_coupling_m2(spont_spikes, spont_mua_spikes)
+
+    new_strip = []
+
+    [new_strip.append(i) for i in new_stpr]
+
+    new_stpr = new_strip 
+
+    shuffle_stpr = shuffle_strip
     # import matplotlib.pyplot as plt
 
     # [plt.plot(stpr) for stpr in population_stpr[rs_units]]
@@ -149,7 +165,7 @@ def build_dfs(date, data_type):
 
        w2_autocorr, w2_tau, w2_fit = whisk.intrinsic_timescale(quad_whisk_1, time)
 
-    pw_peak_latency, aw_peak_latency = whisk.compute_peak_latency(pw_trial_counts, aw_trial_counts)
+    pw_peak_latency, aw_peak_latency = whisk.compute_peak_latency(pw_quad_trial_counts, aw_quad_trial_counts)
 
 
    #  experiment = 'frequency'
@@ -236,7 +252,7 @@ def build_dfs(date, data_type):
     data = {'date': dates, 'label': labels, 'depths': unit_depths, 'rs': rs_units, 'fs': fs_units, 
            'opto_rs': opto_rs_units, 'opto_fs': opto_fs_units, 't2p': pop_t2p,
            'half_width': pop_half_width[:,0], 'l4': l4, 'l23': l23, 'mua_coupling': unit_mua_coupling,
-           'lfp_coupling': unit_lfp_coupling, 'stpr': population_stpr, 'pw_resp_perc': pw_resp_perc, 'pw_latency': pw_latency, 'pw_1_latency': pw_1_latency, 
+           'lfp_coupling': unit_lfp_coupling, 'stpr': population_stpr, 'shuffle_stpr': shuffle_stpr, 'shuffle_mua_coupling': shuffle_mua_coupling, 'shuffle_lfp_coupling': shuffle_lfp_coupling, 'pw_resp_perc': pw_resp_perc, 'pw_latency': pw_latency, 'pw_1_latency': pw_1_latency, 
            'pw_bin_resp': pw_bin_responses, 'aw_resp_perc': aw_resp_perc, 'aw_latency': aw_latency, 'aw_1_latency': aw_1_latency,
            'aw_bin_resp': aw_bin_responses, 'pw_1': pw_quad_1, 'pw_2': pw_quad_2, 'pw_3': pw_quad_3,
            'pw_4': pw_quad_4, 'aw_1': aw_quad_1, 'aw_2': aw_quad_2, 'aw_3': aw_quad_3,'aw_4': aw_quad_4,
@@ -245,7 +261,7 @@ def build_dfs(date, data_type):
            'opto_spont': opto_spont, 'pw_trial_counts':pw_trial_counts, 'aw_trial_counts': aw_trial_counts, 
            'pw_quad_trial_counts': pw_quad_trial_counts, 'aw_quad_trial_counts': aw_quad_trial_counts, 'opto_trial_counts': opto_trial_counts,
            'w1_autocorr': w1_autocorr.tolist(), 'w1_tau': w1_tau.tolist(), 'w1_fit': w1_fit.tolist(), 'w2_autocorr': w2_autocorr.tolist(), 'w2_tau': w2_tau.tolist(), 'w2_fit': w2_fit.tolist(),'pw_peak_latency': pw_peak_latency, 'aw_peak_latency': aw_peak_latency,
-           'pw_total': pw_total, 'aw_total': aw_total, 'opto_jitter': opto_jitter}
+           'pw_total': pw_total, 'aw_total': aw_total, 'opto_jitter': opto_jitter, 'new_stpr': new_stpr, 'new_mua_coupling': new_mua_coupling}
 
          #   'aw_trace_4': aw_trace_4, 'aw_train_4': aw_train_4, 'aw_idx_4': aw_idx_4, 'pw_trace_4': pw_trace_4, 'pw_train_4': pw_train_4, 'pw_idx_4': pw_idx_4, 
          #   'aw_trace_8': aw_trace_8, 'aw_train_8': aw_train_8, 'aw_idx_8': aw_idx_8, 'pw_trace_8': pw_trace_8, 'pw_train_8': pw_train_8, 'pw_idx_8': pw_idx_8,
